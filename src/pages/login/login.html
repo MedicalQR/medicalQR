@@ -1,0 +1,38 @@
+<ion-content>
+  <!-- set your image path -->
+  <div class="background" style="background: url('./assets/imgs/login-background.jpg')"></div>
+  <div class="cape"></div>
+  <div class="content" content>
+    <figure>
+      <!-- set path to your logo -->
+      <img class="login-logo" src="./assets/imgs/login-logo.png" alt="Logo">
+    </figure>
+
+    <form class="login-form">
+      <ion-item>
+        <ion-label color="dark-yellow">
+          <ion-icon name="ios-mail-outline"></ion-icon>
+        </ion-label>
+        <ion-input type="email" placeholder="Email"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label color="dark-yellow">
+            <ion-icon name="ios-lock-outline"></ion-icon>
+        </ion-label>
+        <ion-input type="password" placeholder="Password"></ion-input>
+      </ion-item>
+      <button ion-button full color="darken-blue">Login</button>
+    </form>
+
+    <button ion-button clear margin color="light">Did you forget your password?
+      <br>
+      <a> Recover password </a>
+    </button>
+    <hr class="divider">
+    <button ion-button clear color="light" (click)="register()">
+      Create an account
+    </button>
+  </div>
+</ion-content>
+  
