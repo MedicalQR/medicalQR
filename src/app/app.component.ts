@@ -8,6 +8,9 @@ import { LoginPage } from '../pages/login/login';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import { HomeDoctorsPage } from '../pages/home-doctors/home-doctors';
+import { HomeMinistryPage } from '../pages/home-ministry/home-ministry';
+import { HomePharmacyPage } from '../pages/home-pharmacy/home-pharmacy';
 
 
 @Component({

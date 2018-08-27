@@ -1,12 +1,10 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-
-/**
- * Generated class for the LoginPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+import { DatabaseServiceProvider } from '../../providers/database-service/database-service';
+import { HomeDoctorsPage } from '../home-doctors/home-doctors';
+import { HomePharmacyPage } from '../home-pharmacy/home-pharmacy';
+import { HomeMinistryPage } from '../home-ministry/home-ministry';
+import { RegisterPage } from '../register/register';
 
 @IonicPage()
 @Component({
@@ -15,11 +13,17 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class LoginPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  qrs: any;
+
+  constructor(public navCtrl: NavController, public navParams: NavParams, public firebase: DatabaseServiceProvider) {}
+
+  login() {
+    this.navCtrl.push(HomeDoctorsPage);
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad LoginPage');
-  }
+  register() {
 
-}
+  }
+} 
+
+
