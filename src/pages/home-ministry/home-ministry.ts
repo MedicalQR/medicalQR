@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { DatabaseServiceProvider } from '../../providers/database-service/database-service';
 
 /**
  * Generated class for the HomeMinistryPage page.
@@ -15,11 +16,23 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class HomeMinistryPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public firebase: DatabaseServiceProvider) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad HomeMinistryPage');
+  }
+
+  enable(){
+    this.firebase.getPendingDoctors().valueChanges().subscribe(
+      doctor =>{
+        console.log(doctor);
+      }
+    );
+  }
+
+  disable(){
+    console.log("Inhabilitado");
   }
 
 }

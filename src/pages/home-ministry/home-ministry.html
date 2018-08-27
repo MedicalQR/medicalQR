@@ -14,5 +14,18 @@
 
 
 <ion-content padding>
-
+    <ion-list>
+        <ion-list-header>
+          Listado de Profesionales pendientes de aprobación
+        </ion-list-header>
+        <ion-item-sliding #item>
+          <ion-item>
+            Iván Rao
+          </ion-item>      
+          <ion-item-options side="right">
+            <button ion-button color="success" (click)="enable()">Habilitar</button>
+            <button ion-button color="danger" (click)="disable()">Inhabilitar</button>
+          </ion-item-options>
+        </ion-item-sliding>
+      </ion-list>
 </ion-content>

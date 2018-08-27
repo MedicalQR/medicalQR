@@ -13,12 +13,17 @@ import { RegisterPage } from '../register/register';
 })
 export class LoginPage {
 
-  qrs: any;
+  user : any = {};
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public firebase: DatabaseServiceProvider) {}
 
   login() {
-    this.navCtrl.push(HomeDoctorsPage);
+    //this.navCtrl.push(HomeDoctorsPage);
+    if(this.user.mail == "1"){
+      this.navCtrl.push(HomeMinistryPage);
+    }else{
+      this.navCtrl.push(HomeDoctorsPage);
+    }
   }
 
   register() {

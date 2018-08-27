@@ -20,4 +20,9 @@ constructor(public firebase: AngularFireDatabase) {}
   getStateById(state_id) {
     return this.firebase.list('qrs-states/' + state_id);
   }
+
+  getPendingDoctors() {
+    return this.firebase.list('users/',
+      ref => ref.orderByChild('user_state_id').equalTo("bfff8fef-7b54-42c1-bf7f-83232a08cf5c"));
+  }
 }
