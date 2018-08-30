@@ -9,18 +9,27 @@
   <ion-navbar>
     <ion-title>Home-ministry</ion-title>
   </ion-navbar>
+  <ion-toolbar>
+      <ion-segment [(ngModel)]="icons" color="primary">
+        <ion-segment-button value="pending" (click)="showDoctors('pending')">
+          Pendientes
+        </ion-segment-button>
+        <ion-segment-button value="all" (click)="showDoctors('all')">
+          Todos
+        </ion-segment-button>
+      </ion-segment>
+    </ion-toolbar>
 
 </ion-header>
-
 
 <ion-content padding>
     <ion-list>
         <ion-list-header>
           Listado de Profesionales pendientes de aprobación
         </ion-list-header>
-        <ion-item-sliding #item>
+        <ion-item-sliding #item *ngFor="let doctor of doctors">
           <ion-item>
-            Iván Rao
+            {{doctor.name}} 
           </ion-item>      
           <ion-item-options side="right">
             <button ion-button color="success" (click)="enable()">Habilitar</button>

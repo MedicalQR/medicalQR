@@ -16,11 +16,43 @@ import { DatabaseServiceProvider } from '../../providers/database-service/databa
 })
 export class HomeMinistryPage {
 
+  //pendingDoctors: any;
+  doctors: any;
+
   constructor(public navCtrl: NavController, public navParams: NavParams, public firebase: DatabaseServiceProvider) {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad HomeMinistryPage');
+    //console.log('ionViewDidLoad HomeMinistryPage');
+    this.showPendingDoctors();
+  }
+
+  showAllDoctors(){
+    this.doctors = null
+    this.firebase.getAllDoctors().valueChanges().subscribe(
+      doctors => {
+        this.doctors = doctors;
+        console.log(this.doctors);
+    })
+  }
+
+  showPendingDoctors(){
+    this.doctors = null
+    this.firebase.getPendingDoctors().valueChanges().subscribe(
+      doctors => {
+        this.doctors = doctors;
+        console.log(this.doctors);
+    })
+  }
+
+  showDoctors(selectedButton){
+    console.log(selectedButton)
+    if(selectedButton == "all"){
+      this.showAllDoctors();
+    }else {
+      this.showPendingDoctors();
+    }
+     
   }
 
   enable(){
