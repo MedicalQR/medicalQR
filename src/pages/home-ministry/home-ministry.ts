@@ -17,8 +17,6 @@ import { DatabaseServiceProvider } from '../../providers/database-service/databa
 export class HomeMinistryPage {
 
   doctors: any;
-  doctors_state: any;
-
   constructor(public navCtrl: NavController, public navParams: NavParams, public firebase: DatabaseServiceProvider) {
   }
 
@@ -28,7 +26,7 @@ export class HomeMinistryPage {
   }
 
   obtainEnabledDoctors(){
-    this.doctors = null
+    this.doctors = null;
     this.firebase.getEnabledDoctors().valueChanges().subscribe(
       doctors => {
         this.doctors = doctors;
@@ -36,7 +34,7 @@ export class HomeMinistryPage {
   }
 
   obtainDisabledDoctors(){
-    this.doctors = null
+    this.doctors = null;
     this.firebase.getDisabledDoctors().valueChanges().subscribe(
       doctors => {
         this.doctors = doctors;
@@ -44,10 +42,10 @@ export class HomeMinistryPage {
   }
 
   obtainPendingDoctors(){
-    this.doctors = null
+    this.doctors = null;
     this.firebase.getPendingDoctors().valueChanges().subscribe(
       doctors => {
-        this.doctors = doctors;
+        this.doctors = doctors;        
     })
   }
 
@@ -61,7 +59,7 @@ export class HomeMinistryPage {
     else {
       this.obtainPendingDoctors();
     }
-     
+    console.log(this.doctors);
   }
 
   enable(doctor){
@@ -89,5 +87,4 @@ export class HomeMinistryPage {
       this.obtainDisabledDoctors();
     } 
   }
-
 }
