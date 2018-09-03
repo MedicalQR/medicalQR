@@ -14,8 +14,11 @@
         <ion-segment-button value="pending" (click)="showDoctors('pending')">
           Pendientes
         </ion-segment-button>
-        <ion-segment-button value="all" (click)="showDoctors('all')">
-          Todos
+        <ion-segment-button value="enabled" (click)="showDoctors('enabled')">
+          Habilitados
+        </ion-segment-button>
+        <ion-segment-button value="disabled" (click)="showDoctors('disabled')">
+          Deshabilitados
         </ion-segment-button>
       </ion-segment>
     </ion-toolbar>
@@ -24,16 +27,13 @@
 
 <ion-content padding>
     <ion-list>
-        <ion-list-header>
-          Listado de Profesionales pendientes de aprobación
-        </ion-list-header>
         <ion-item-sliding #item *ngFor="let doctor of doctors">
           <ion-item>
             {{doctor.name}} 
           </ion-item>      
           <ion-item-options side="right">
-            <button ion-button color="success" (click)="enable()">Habilitar</button>
-            <button ion-button color="danger" (click)="disable()">Inhabilitar</button>
+            <button ion-button color="success" (click)="enable(doctor)">Habilitar</button>
+            <button ion-button color="danger" (click)="disable(doctor)">Inhabilitar</button>
           </ion-item-options>
         </ion-item-sliding>
       </ion-list>

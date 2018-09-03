@@ -16,55 +16,78 @@ import { DatabaseServiceProvider } from '../../providers/database-service/databa
 })
 export class HomeMinistryPage {
 
-  //pendingDoctors: any;
   doctors: any;
+  doctors_state: any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public firebase: DatabaseServiceProvider) {
   }
 
   ionViewDidLoad() {
     //console.log('ionViewDidLoad HomeMinistryPage');
-    this.showPendingDoctors();
+    this.obtainPendingDoctors();
   }
 
-  showAllDoctors(){
+  obtainEnabledDoctors(){
     this.doctors = null
-    this.firebase.getAllDoctors().valueChanges().subscribe(
+    this.firebase.getEnabledDoctors().valueChanges().subscribe(
       doctors => {
         this.doctors = doctors;
-        console.log(this.doctors);
     })
   }
 
-  showPendingDoctors(){
+  obtainDisabledDoctors(){
+    this.doctors = null
+    this.firebase.getDisabledDoctors().valueChanges().subscribe(
+      doctors => {
+        this.doctors = doctors;
+    })
+  }
+
+  obtainPendingDoctors(){
     this.doctors = null
     this.firebase.getPendingDoctors().valueChanges().subscribe(
       doctors => {
         this.doctors = doctors;
-        console.log(this.doctors);
     })
   }
 
   showDoctors(selectedButton){
-    console.log(selectedButton)
-    if(selectedButton == "all"){
-      this.showAllDoctors();
-    }else {
-      this.showPendingDoctors();
+    if(selectedButton == "enabled"){
+      this.obtainEnabledDoctors();
+    }
+    else if (selectedButton == "disabled"){
+      this.obtainDisabledDoctors();
+    }
+    else {
+      this.obtainPendingDoctors();
     }
      
   }
 
-  enable(){
-    this.firebase.getPendingDoctors().valueChanges().subscribe(
-      doctor =>{
-        console.log(doctor);
-      }
-    );
+  enable(doctor){
+    let old_state = doctor.user_state_id;
+    doctor.user_state_id = "2103d550-17c2-4ff5-9b61-73e7f4ea6a7f";
+    this.firebase.editDoctorState(doctor);
+    if(old_state == "bfff8fef-7b54-42c1-bf7f-83232a08cf5c"){ //Pending state//
+      this.obtainPendingDoctors();
+    }else if(old_state == "2103d550-17c2-4ff5-9b61-73e7f4ea6a7f"){ //Enabled state//
+      this.obtainEnabledDoctors();
+    }else {
+      this.obtainDisabledDoctors();
+    } 
   }
 
-  disable(){
-    console.log("Inhabilitado");
+  disable(doctor){
+    let old_state = doctor.user_state_id;
+    doctor.user_state_id = "5058ea0c-3e21-4698-bd91-5f9a891caceb"
+    this.firebase.editDoctorState(doctor);
+    if(old_state == "bfff8fef-7b54-42c1-bf7f-83232a08cf5c"){ //Pending state//
+      this.obtainPendingDoctors();
+    }else if(old_state == "2103d550-17c2-4ff5-9b61-73e7f4ea6a7f"){ //Enabled state//
+      this.obtainEnabledDoctors();
+    }else {
+      this.obtainDisabledDoctors();
+    } 
   }
 
 }
