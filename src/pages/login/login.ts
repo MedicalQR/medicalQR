@@ -5,6 +5,7 @@ import { HomeDoctorsPage } from '../home-doctors/home-doctors';
 import { HomePharmacyPage } from '../home-pharmacy/home-pharmacy';
 import { HomeMinistryPage } from '../home-ministry/home-ministry';
 import { RegisterPage } from '../register/register';
+import {Validators, FormBuilder, FormGroup } from '@angular/forms';
 
 @IonicPage()
 @Component({
@@ -14,8 +15,19 @@ import { RegisterPage } from '../register/register';
 export class LoginPage {
 
   user : any = {};
+  private todo : FormGroup;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public firebase: DatabaseServiceProvider) {}
+  constructor(public navCtrl: NavController, public navParams: NavParams, public firebase: DatabaseServiceProvider, private formBuilder: FormBuilder ) {
+    this.user = this.formBuilder.group({
+      document: ['', Validators.required],
+      password: ['', Validators.required],
+      userType : ['', Validators.required],
+  });
+}
+
+  logForm(){
+    console.log(this.user.value)
+  }
 
   login() {
     //this.navCtrl.push(HomeDoctorsPage);
