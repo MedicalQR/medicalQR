@@ -10,6 +10,7 @@ import { LoginPage } from '../pages/login/login';
 import { HomeDoctorsPage } from '../pages/home-doctors/home-doctors';
 import { HomePharmacyPage } from '../pages/home-pharmacy/home-pharmacy';
 import { HomeMinistryPage } from '../pages/home-ministry/home-ministry';
+import { ModalDoctorPage } from '../pages/modal-doctor/modal-doctor';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -39,7 +40,8 @@ var config = {
     LoginPage,
     HomeDoctorsPage,
     HomePharmacyPage,
-    HomeMinistryPage
+    HomeMinistryPage,
+    ModalDoctorPage
   ],
   imports: [
     BrowserModule,
@@ -57,7 +59,8 @@ var config = {
     LoginPage,
     HomeDoctorsPage,
     HomePharmacyPage,
-    HomeMinistryPage
+    HomeMinistryPage,
+    ModalDoctorPage
   ],
   providers: [
     StatusBar,
