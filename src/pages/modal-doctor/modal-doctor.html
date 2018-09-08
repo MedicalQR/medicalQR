@@ -1,0 +1,36 @@
+<ion-header>
+    <ion-toolbar>
+      <ion-title>
+        Información del profesional
+      </ion-title>
+      <ion-buttons start>
+        <button ion-button (click)="dismiss()">
+          <span ion-text color="primary" showWhen="ios">Cancel</span>
+          <ion-icon name="md-close" showWhen="android,windows">Cancel</ion-icon>
+        </button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-content>
+    <ion-list>  
+        <ion-item>
+          Nombre
+          <ion-note item-end>
+            {{doctor.name}}
+          </ion-note>
+        </ion-item>
+        <ion-item>
+          Licencia médica
+          <ion-note item-end>
+            {{doctor.license}}
+          </ion-note>
+        </ion-item>
+        <ion-item>
+          CUIL
+          <ion-note item-end>
+            {{doctor.document}}
+          </ion-note>
+        </ion-item>
+    </ion-list>
+  </ion-content>

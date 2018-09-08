@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { ModalController, IonicPage, NavController, NavParams } from 'ionic-angular';
 import { DatabaseServiceProvider } from '../../providers/database-service/database-service';
+import {ModalDoctorPage} from '../modal-doctor/modal-doctor';
 
 /**
  * Generated class for the HomeMinistryPage page.
@@ -17,7 +18,14 @@ import { DatabaseServiceProvider } from '../../providers/database-service/databa
 export class HomeMinistryPage {
 
   doctors: any;
-  constructor(public navCtrl: NavController, public navParams: NavParams, public firebase: DatabaseServiceProvider) {
+
+  constructor(public modalCtrl: ModalController, public navCtrl: NavController, public navParams: NavParams, public firebase: DatabaseServiceProvider) {
+  }
+
+  openModal(user_id) {
+    
+    let modal = this.modalCtrl.create(ModalDoctorPage, user_id);
+    modal.present();
   }
 
   ionViewDidLoad() {

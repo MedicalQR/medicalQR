@@ -47,7 +47,8 @@ var config = {
     HomeDoctorsPage,
     HomePharmacyPage,
     HomeMinistryPage,
-    NewQrPage
+    NewQrPage,
+    ModalDoctorPage
   ],
   imports: [
     BrowserModule,
@@ -67,7 +68,8 @@ var config = {
     HomeDoctorsPage,
     HomePharmacyPage,
     HomeMinistryPage,
-    NewQrPage
+    NewQrPage,
+    ModalDoctorPage
   ],
   providers: [
     StatusBar,
