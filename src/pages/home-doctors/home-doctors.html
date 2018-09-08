@@ -1,14 +1,29 @@
 <ion-header>
-  <ion-navbar>
-    <ion-title>Home-doctors</ion-title>
+  <ion-navbar hideBackButton >
+    <ion-title>Home-doctors
+    </ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
   <ion-list-header>
     Lista de Sellos
+    <button ion-button (click)="createQR()" item-end> 
+      Generar nuevo código
+    </button>
   </ion-list-header>
-  <ion-item *ngFor="let qr of qrs">
-    {{qr.state}}
-  </ion-item>
+  <ion-list>
+    <ion-item-sliding *ngFor="let qr of qrs">
+      <ion-item>
+        <ion-thumbnail item-start>
+          <img src="{{qr.image}}">
+        </ion-thumbnail>
+        <p item-end>{{qr.state}}</p>
+      </ion-item>
+      <ion-item-options side="right">
+        <button ion-button (click)="editQR(qr)">Ver</button>
+        <button ion-button color="danger" (click)="disableQR(qr)">Inhabilitar</button>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
 </ion-content>

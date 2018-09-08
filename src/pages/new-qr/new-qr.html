@@ -1,0 +1,19 @@
+<ion-header>
+    <ion-navbar>
+      <ion-title>
+        QR Code App
+      </ion-title>
+    </ion-navbar>
+  </ion-header>
+   
+  <ion-content padding >
+    <h6 text-center>
+      Su nuevo código QR ha sido generado exitósamente. <br>
+      Si desea conservarlo, presione el botón "Guardar". De lo contrario, presione el botón "Cancelar".
+    </h6>
+    <ion-item *ngIf="createdCode" text-center>
+      <ngx-qrcode [qrc-value]="createdCode"></ngx-qrcode>
+    </ion-item>
+    <button ion-button full (click)="saveCode()">Guardar</button>
+    <button ion-button full color="danger" (click)="ignoreCode()">Cancelar</button>
+  </ion-content>

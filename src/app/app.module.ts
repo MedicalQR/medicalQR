@@ -10,6 +10,7 @@ import { LoginPage } from '../pages/login/login';
 import { HomeDoctorsPage } from '../pages/home-doctors/home-doctors';
 import { HomePharmacyPage } from '../pages/home-pharmacy/home-pharmacy';
 import { HomeMinistryPage } from '../pages/home-ministry/home-ministry';
+import { NewQrPage } from '../pages/new-qr/new-qr';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -18,6 +19,12 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { DatabaseServiceProvider } from '../providers/database-service/database-service';
+
+import { NgxQRCodeModule } from 'ngx-qrcode2';
+import { BarcodeScanner } from '@ionic-native/barcode-scanner';
+
+import { Guid } from "guid-typescript";
+
 
 
 
@@ -39,14 +46,16 @@ var config = {
     LoginPage,
     HomeDoctorsPage,
     HomePharmacyPage,
-    HomeMinistryPage
+    HomeMinistryPage,
+    NewQrPage
   ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
     AngularFireModule.initializeApp(config,'medicalqr'),
     AngularFireDatabaseModule,
-    AngularFirestoreModule
+    AngularFirestoreModule,
+    NgxQRCodeModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -57,13 +66,16 @@ var config = {
     LoginPage,
     HomeDoctorsPage,
     HomePharmacyPage,
-    HomeMinistryPage
+    HomeMinistryPage,
+    NewQrPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    DatabaseServiceProvider
+    DatabaseServiceProvider,
+    BarcodeScanner,
+    
   ]
 })
 export class AppModule {}
