@@ -9,8 +9,9 @@ export class DatabaseServiceProvider {
 
 constructor(public firebase: AngularFireDatabase) {}
 
-  getAllQRs() {
-    return this.firebase.list('qrs/');
+  getAllQRsByDoctorId(doctorId) {
+    return this.firebase.list('qrs/',
+      ref => ref.orderByChild('user_id').equalTo(doctorId));
   }
 
   getAllQRsStates() {
@@ -19,6 +20,12 @@ constructor(public firebase: AngularFireDatabase) {}
 
   getStateById(state_id) {
     return this.firebase.list('qrs-states/' + state_id);
+  }
+
+  
+  getQRById(qr_id) {
+    return this.firebase.list('qrs/',
+      ref => ref.orderByChild('id').equalTo(qr_id));
   }
 
   getAllUsers() {
@@ -46,5 +53,17 @@ constructor(public firebase: AngularFireDatabase) {}
 
   getRoles(){
     return this.firebase.list('roles/');
+  }
+  
+  editQRState(qr){
+    this.firebase.database.ref('qrs/' + qr.id).set(qr);
+  }
+
+  createQR(qr){
+    this.firebase.database.ref('qrs/' + qr.id).set(qr);
+  }
+
+  editQR(qr){
+    this.firebase.database.ref('users/' + qr.id).set(qr);
   }
 }
