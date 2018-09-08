@@ -21,7 +21,7 @@ constructor(public firebase: AngularFireDatabase) {}
     return this.firebase.list('qrs-states/' + state_id);
   }
 
-  getAllDoctors() {
+  getAllUsers() {
     return this.firebase.list('users/');
   }
 
@@ -42,5 +42,9 @@ constructor(public firebase: AngularFireDatabase) {}
 
   editDoctorState(doctor){
     this.firebase.database.ref('users/' + doctor.user_id).set(doctor);
+  }
+
+  getRoles(){
+    return this.firebase.list('roles/');
   }
 }

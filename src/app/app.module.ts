@@ -11,6 +11,7 @@ import { HomeDoctorsPage } from '../pages/home-doctors/home-doctors';
 import { HomePharmacyPage } from '../pages/home-pharmacy/home-pharmacy';
 import { HomeMinistryPage } from '../pages/home-ministry/home-ministry';
 import { ModalDoctorPage } from '../pages/modal-doctor/modal-doctor';
+import { RegisterPage } from '../pages/register/register';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -19,6 +20,7 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { DatabaseServiceProvider } from '../providers/database-service/database-service';
+import { BrMaskerModule } from 'brmasker-ionic-3';
 
 
 
@@ -41,14 +43,16 @@ var config = {
     HomeDoctorsPage,
     HomePharmacyPage,
     HomeMinistryPage,
-    ModalDoctorPage
+    ModalDoctorPage,
+    RegisterPage
   ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
     AngularFireModule.initializeApp(config,'medicalqr'),
     AngularFireDatabaseModule,
-    AngularFirestoreModule
+    AngularFirestoreModule,
+    BrMaskerModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -60,7 +64,8 @@ var config = {
     HomeDoctorsPage,
     HomePharmacyPage,
     HomeMinistryPage,
-    ModalDoctorPage
+    ModalDoctorPage,
+    RegisterPage
   ],
   providers: [
     StatusBar,

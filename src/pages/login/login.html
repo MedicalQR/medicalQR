@@ -7,41 +7,21 @@
       <!-- set path to your logo -->
       <img class="login-logo" src="./assets/imgs/login-logo.png" alt="Logo">
     </figure>
-    
-    <form class="login-form">
 
-      <ion-item>
-        <ion-label color="dark-yellow">
-          <ion-icon name="ios-mail-outline"></ion-icon>
-        </ion-label>
-        <ion-input type="email" placeholder="Email" name="email" [(ngModel)]="user.mail"></ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label color="dark-yellow">
-            <ion-icon name="ios-lock-outline"></ion-icon>
-        </ion-label>
-        <ion-input type="password" placeholder="Password" name = "password" [(ngModel)]="user.password"></ion-input>
-      </ion-item>
-      <button ion-button full color="darken-blue" (click)="login()">Login</button>
-    </form>
-
-    <form [formGroup]="user" (ngSubmit)="logForm()" class="login-form">
+    <form [formGroup]="loggedUser" (ngSubmit)="logForm()" class="login-form">
       <ion-item>
         <ion-label color="dark-yellow">
           Tipo de usuario
         </ion-label>
-          <ion-select formControlName="userType">
-            <ion-option value="p">Profesionales</ion-option>
-            <ion-option value="e">Empresas</ion-option>
-            <ion-option value="m">Ministerio de salud</ion-option>
+          <ion-select formControlName="role">
+            <ion-option *ngFor="let role of allRoles" value="{{role.roles_id}}">{{role.name}}</ion-option>
         </ion-select>
       </ion-item>
       <ion-item>
         <ion-label color="dark-yellow">
           CUIT/CUIL 
         </ion-label>
-        <ion-input type="number" formControlName="document"></ion-input>
+        <ion-input type="text" [brmasker]="{mask:'00-00000000-0', len:13, type:'num'}" value="30-11111111-8" formControlName="document"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label color="dark-yellow">
@@ -49,13 +29,15 @@
         </ion-label>
         <ion-input type="password" name = "password" formControlName="password"></ion-input>
       </ion-item>
-      <button ion-button full color="darken-blue" type="submit" [disabled]="!user.valid">Login</button>
+      <button ion-button full color="darken-blue" type="submit" [disabled]="!loggedUser.valid">Login</button>
     </form>
 
-    <button ion-button clear margin color="light">Did you forget your password?
-      <br>
-      <a> Recover password </a>
-    </button>
+    <p ion-text color="light" >Did you forget your password?
+        <a (click)="register()" ion-text color="secondary">
+          <br>Recover password
+        </a>
+    </p>
+    
     <hr class="divider">
     <button ion-button clear color="light" (click)="register()">
       Create an account

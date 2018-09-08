@@ -12,7 +12,7 @@ import { HomeDoctorsPage } from '../pages/home-doctors/home-doctors';
 import { HomeMinistryPage } from '../pages/home-ministry/home-ministry';
 import { HomePharmacyPage } from '../pages/home-pharmacy/home-pharmacy';
 import { ModalDoctorPage } from '../pages/modal-doctor/modal-doctor';
-
+import { RegisterPage } from '../pages/register/register';
 
 @Component({
   templateUrl: 'app.html'
