@@ -11,6 +11,7 @@ import { HomeDoctorsPage } from '../pages/home-doctors/home-doctors';
 import { HomePharmacyPage } from '../pages/home-pharmacy/home-pharmacy';
 import { HomeMinistryPage } from '../pages/home-ministry/home-ministry';
 import { NewQrPage } from '../pages/new-qr/new-qr';
+import { ModalDoctorPage } from '../pages/modal-doctor/modal-doctor';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
