@@ -1,29 +1,41 @@
-<ion-header>
-  <ion-navbar hideBackButton >
-    <ion-title>Home-doctors
-    </ion-title>
+<ion-header >
+  <ion-navbar hideBackButton>
+    <ion-title>Profesional de la Salud</ion-title>
   </ion-navbar>
+
+  <ion-toolbar>
+      <ion-segment [(ngModel)]="icons" color="primary">
+        <ion-segment-button id="Pending" value="pending" (click)="obtainQRs('Pending')">
+          Pendientes
+        </ion-segment-button>
+        <ion-segment-button id="Enabled" value="enabled" (click)="obtainQRs('Enabled')">
+          Habilitados
+        </ion-segment-button>
+        <ion-segment-button id="Disabled" value="disabled" (click)="obtainQRs('Disabled')">
+          Deshabilitados
+        </ion-segment-button>
+      </ion-segment>
+    </ion-toolbar>
+
 </ion-header>
 
 <ion-content padding>
-  <ion-list-header>
-    Lista de Sellos
-    <button ion-button (click)="createQR()" item-end> 
-      Generar nuevo código
-    </button>
-  </ion-list-header>
+    <ion-fab top right edge>
+        <button ion-fab mini item-end (click)="createQR()">+</button>
+      </ion-fab>
   <ion-list>
-    <ion-item-sliding *ngFor="let qr of qrs">
+    <ion-item-sliding #item *ngFor="let qr of qrs">
       <ion-item>
         <ion-thumbnail item-start>
           <img src="{{qr.image}}">
         </ion-thumbnail>
         <p item-end>{{qr.state}}</p>
-      </ion-item>
+      </ion-item>   
       <ion-item-options side="right">
-        <button ion-button (click)="editQR(qr)">Ver</button>
-        <button ion-button color="danger" (click)="disableQR(qr)">Inhabilitar</button>
+        <button ion-button color="primary" (click)="openModal({qr_id: qr.id})">Información</button>
+        <button *ngIf="qr.qr_state_id!=='c815819f-a121-453a-8708-f8b0e1a70215'" ion-button color="success" (click)="enable(qr)">Habilitar</button>
+        <button *ngIf="qr.qr_state_id!=='7923230e-9c35-4f93-9fb3-5e2634a0f5e1'" ion-button color="danger" (click)="disable(qr)">Inhabilitar</button>
       </ion-item-options>
     </ion-item-sliding>
-  </ion-list>
+  </ion-list>      
 </ion-content>

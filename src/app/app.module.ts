@@ -12,6 +12,7 @@ import { HomePharmacyPage } from '../pages/home-pharmacy/home-pharmacy';
 import { HomeMinistryPage } from '../pages/home-ministry/home-ministry';
 import { NewQrPage } from '../pages/new-qr/new-qr';
 import { ModalDoctorPage } from '../pages/modal-doctor/modal-doctor';
+import { ModalQrPage } from '../pages/modal-qr/modal-qr';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -25,6 +26,7 @@ import { NgxQRCodeModule } from 'ngx-qrcode2';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 
 import { Guid } from "guid-typescript";
+
 
 
 
@@ -49,7 +51,8 @@ var config = {
     HomePharmacyPage,
     HomeMinistryPage,
     NewQrPage,
-    ModalDoctorPage
+    ModalDoctorPage,
+    ModalQrPage
   ],
   imports: [
     BrowserModule,
@@ -70,7 +73,8 @@ var config = {
     HomePharmacyPage,
     HomeMinistryPage,
     NewQrPage,
-    ModalDoctorPage
+    ModalDoctorPage,
+    ModalQrPage
   ],
   providers: [
     StatusBar,

@@ -1,0 +1,43 @@
+<ion-header>
+    <ion-toolbar>
+      <ion-title>
+        Informaciónd el código QR
+      </ion-title>
+      <ion-buttons start>
+        <button ion-button (click)="dismiss()">
+          <span ion-text color="primary" showWhen="ios">Cancel</span>
+          <ion-icon name="close"></ion-icon>
+        </button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-content>
+    <ion-list>  
+        <ion-item>
+          Código QR
+          <ion-note item-end>
+            <img src="{{qr.image}}">
+          </ion-note>
+        </ion-item>
+        <ion-item>
+          Fecha de creación
+          <ion-note item-end>
+            {{qr.creation_date}}
+          </ion-note>
+        </ion-item>
+        <ion-item>
+          Fecha última modificación
+          <ion-note item-end>
+            {{qr.modification_date}}
+          </ion-note>
+        </ion-item>
+        <ion-item>
+          Estado
+          <ion-note item-end>
+            {{qr.state}}
+          </ion-note>
+        </ion-item>
+    </ion-list>
+    <button ion-button full (click)="printQR()">Imprimir QR</button>
+  </ion-content>
