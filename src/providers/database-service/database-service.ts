@@ -9,9 +9,10 @@ export class DatabaseServiceProvider {
 
 constructor(public firebase: AngularFireDatabase) {}
 
-  getAllQRs() {
-    return this.firebase.list('qrs/');
-  }
+getAllQRsById() {
+  return this.firebase.list('qrs/',
+    ref => ref.orderByChild('user_id').equalTo("a3cf01bd-c7f8-4125-9fff-28cd3705f9f9"));
+}
 
   getAllQRsStates() {
     return this.firebase.list('qrs-states/');
@@ -42,5 +43,13 @@ constructor(public firebase: AngularFireDatabase) {}
 
   editDoctorState(doctor){
     this.firebase.database.ref('users/' + doctor.user_id).set(doctor);
+  }
+
+  createQR(qr){
+    this.firebase.database.ref('qrs/' + qr.id).set(qr);
+  }
+
+  editQR(qr){
+    this.firebase.database.ref('users/' + qr.id).set(qr);
   }
 }
