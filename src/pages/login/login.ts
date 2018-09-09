@@ -106,6 +106,9 @@ export class LoginPage {
     if(this.errorMessage != null){
       this.showPrompt(this.errorMessage)
     }
+    else {
+      this.navCtrl.push(HomePharmacyPage);
+    }
   }
 
   showPrompt(errorMessage) {
