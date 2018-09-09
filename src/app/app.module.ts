@@ -88,8 +88,7 @@ var config = {
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     DatabaseServiceProvider,
-    BarcodeScanner,
-    
+    BarcodeScanner
   ]
 })
 export class AppModule {}

@@ -37,7 +37,7 @@ export class HomeMinistryPage {
     this.doctors = null;
     this.firebase.getEnabledDoctors().valueChanges().subscribe(
       doctors => {
-        this.doctors = doctors;
+        this.doctors = this.filterUsersbyRole(doctors);
     })
   }
 
@@ -45,7 +45,7 @@ export class HomeMinistryPage {
     this.doctors = null;
     this.firebase.getDisabledDoctors().valueChanges().subscribe(
       doctors => {
-        this.doctors = doctors;
+        this.doctors = this.filterUsersbyRole(doctors);
     })
   }
 
@@ -53,8 +53,18 @@ export class HomeMinistryPage {
     this.doctors = null;
     this.firebase.getPendingDoctors().valueChanges().subscribe(
       doctors => {
-        this.doctors = doctors;        
+        this.doctors = this.filterUsersbyRole(doctors);     
     })
+  }
+
+  filterUsersbyRole(tempDoctors){
+    let filterDoctors = [];
+    for (let i = 0; i < tempDoctors.length; i++) {
+      if(tempDoctors[i].role_id == "37a938a1-e7f0-42c2-adeb-b8a9a36b6cb8"){
+        filterDoctors.push(tempDoctors[i])
+      }
+    };
+    return filterDoctors;
   }
 
   showDoctors(selectedButton){
@@ -67,7 +77,6 @@ export class HomeMinistryPage {
     else {
       this.obtainPendingDoctors();
     }
-    console.log(this.doctors);
   }
 
   enable(doctor){

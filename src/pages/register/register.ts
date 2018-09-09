@@ -35,7 +35,7 @@ export class RegisterPage {
   constructor(public alertCtrl: AlertController, public navCtrl: NavController, public navParams: NavParams, public firebase: DatabaseServiceProvider, private formBuilder: FormBuilder) {
     
     this.newUser = this.formBuilder.group({
-      document: ['', Validators.required],
+      document: ['', Validators.compose([Validators.required, Validators.minLength(13)])],
       license: [''],
       name : ['', Validators.required],
       password : ['', Validators.compose([Validators.required, Validators.minLength(8)])],
@@ -108,7 +108,6 @@ export class RegisterPage {
         user_state_id : this.newUser.value.user_state_id
       }
       this.firebase.createUser(createdUser);
-      this.saveQrCode(createdUser)
       this.goToHome(createdUser.role_id);
     }
   }
@@ -132,7 +131,7 @@ export class RegisterPage {
 
   obtainCorrectState(){
     if(this.newUser.value.role_id == "37a938a1-e7f0-42c2-adeb-b8a9a36b6cb8"){ //Profesionales de la salud
-      this.newUser.value.user_state_id = "5058ea0c-3e21-4698-bd91-5f9a891caceb" //Inhabiltado
+      this.newUser.value.user_state_id = "bfff8fef-7b54-42c1-bf7f-83232a08cf5c" //Pendiente
     } else {
       this.newUser.value.user_state_id = "2103d550-17c2-4ff5-9b61-73e7f4ea6a7f" //Habilitado
     }
@@ -186,26 +185,4 @@ export class RegisterPage {
     alert.present();
     this.navCtrl.push(LoginPage);
   }
-
-  saveQrCode(user) {
-
-    if(user.role_id == "37a938a1-e7f0-42c2-adeb-b8a9a36b6cb8"){
-      let todaysDate = new Date().toLocaleDateString();
-      this.createdQrCode = Guid.create().toString();
-
-      var image = this.createdQrCode;
-      image = image.slice(10,-2);
-
-      var qr_code = {
-        "id": this.createdQrCode,
-        "creation_date": todaysDate,
-        "image": image,
-        "modification_date": todaysDate,
-        "qr_state_id": "57cc0115-360b-4af3-ad5d-da275d6243d3",
-        "user_id": user.user_id
-      }
-      this.firebase.createQR(qr_code);
-    }
-  }
-
 }
