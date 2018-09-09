@@ -11,12 +11,15 @@ import { ModalQrPage } from '../modal-qr/modal-qr';
 })
 export class HomeDoctorsPage {
 
-  doctorId = "a3cf01bd-c7f8-4125-9fff-28cd3705f9f9";
+  doctorId : any;
   qrs: any = [];
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public firebase: DatabaseServiceProvider, public modalCtrl: ModalController) {}
+  constructor(public navCtrl: NavController, public navParams: NavParams, public firebase: DatabaseServiceProvider, public modalCtrl: ModalController) {
+    this.doctorId = this.navParams.get("id");
+  }
 
   ionViewDidLoad(){
+    this.doctorId = this.navParams.get("id");
     this.obtainQRs("Pending");
   }
 

@@ -61,14 +61,14 @@ export class LoginPage {
 
   logForm(){
     this.correctUser = {};
-    this.errorMessage = {};
+    this.errorMessage = null;
 
     this.loggedUser.value.document = this.loggedUser.value.document.replace('-', '');
     this.loggedUser.value.document = this.loggedUser.value.document.replace('-', '');
 
     for (let i = 0; i < this.allUsers.length; i++) {
       if(this.allUsers[i].document == this.loggedUser.value.document){
-        this.errorMessage = {};
+        this.errorMessage = null;
         this.correctUser = this.allUsers[i];
         break;
       }else{
@@ -81,22 +81,24 @@ export class LoginPage {
         if(this.correctUser.user_state_id == "2103d550-17c2-4ff5-9b61-73e7f4ea6a7f"){//Usuario habilitado
           if(this.loggedUser.value.role == this.correctUser.role_id){
             if (this.correctUser.role_id == "37a938a1-e7f0-42c2-adeb-b8a9a36b6cb8"){ //Doctores
-              this.navCtrl.push(HomeDoctorsPage);
+              this.navCtrl.push(HomeDoctorsPage, {
+                id: this.correctUser.user_id
+              });
             }else if (this.correctUser.role_id == "35d0b156-e7be-4af1-a84d-3e9e30a2bd06"){ //Ministerio
               this.navCtrl.push(HomeMinistryPage);
             }else {
               this.navCtrl.push(HomePharmacyPage);
             }
-          }else{
-            this.errorMessage = {};
+          }else{  
+            this.errorMessage = null;
             this.errorMessage = "Los datos ingresados no son correctos"
           }
         }else {
-          this.errorMessage = {};
+          this.errorMessage = null;
           this.errorMessage = "Los datos ingresados no son correctos"
         }
       }else{
-        this.errorMessage = {};
+        this.errorMessage = null;
         this.errorMessage = "Los datos ingresados no son correctos"
       } 
     }   

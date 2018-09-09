@@ -66,4 +66,8 @@ constructor(public firebase: AngularFireDatabase) {}
   editQR(qr){
     this.firebase.database.ref('users/' + qr.id).set(qr);
   }
+
+  getAllUsersStates(){
+    return this.firebase.list('users_states/');
+  }
 }

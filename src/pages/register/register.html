@@ -21,7 +21,7 @@
             Tipo de usuario
           </ion-label>
             <ion-select formControlName="role_id">
-              <!--<ion-option *ngFor="let role of allRoles" value="{{role.roles_id}}">{{role.name}}</ion-option>-->
+              <ion-option *ngFor="let role of allRoles" value="{{role.roles_id}}">{{role.name}}</ion-option>
           </ion-select>
         </ion-item>
         
@@ -52,9 +52,9 @@
             Confirmar Password
           </ion-label>
           <ion-input type="password" name = "cPassword" formControlName="cPassword"></ion-input>
-        </ion-item>
+        </ion-item>   
 
-        <ion-item>
+        <ion-item *ngIf="newUser.value.role_id =='37a938a1-e7f0-42c2-adeb-b8a9a36b6cb8'">
           <ion-label color="dark-yellow">
             Licencia médica
           </ion-label>
