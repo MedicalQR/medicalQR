@@ -70,4 +70,8 @@ constructor(public firebase: AngularFireDatabase) {}
   getAllUsersStates(){
     return this.firebase.list('users_states/');
   }
+
+  createUser(user){
+    this.firebase.database.ref('users/' + user.user_id).set(user);
+  }
 }

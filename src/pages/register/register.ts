@@ -2,9 +2,12 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { DatabaseServiceProvider } from '../../providers/database-service/database-service';
 import {Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { LoginPage } from '../login/login';
 import { BrMaskerModule } from 'brmasker-ionic-3';
 import {Md5} from 'ts-md5/dist/md5';
 import { Guid } from "guid-typescript";
+import { AlertController } from 'ionic-angular';
+
 
 /**
  * Generated class for the RegisterPage page.
@@ -25,12 +28,15 @@ export class RegisterPage {
   allRoles : any = [];
   allStates : any = [];
   errorMessage : any;
+  passwordErrorMessage : any;
+  cPasswordErrorMessage : any;
+  createdQrCode = null;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public firebase: DatabaseServiceProvider, private formBuilder: FormBuilder) {
+  constructor(public alertCtrl: AlertController, public navCtrl: NavController, public navParams: NavParams, public firebase: DatabaseServiceProvider, private formBuilder: FormBuilder) {
     
     this.newUser = this.formBuilder.group({
       document: ['', Validators.required],
-      license: ['', Validators.required],
+      license: [''],
       name : ['', Validators.required],
       password : ['', Validators.compose([Validators.required, Validators.minLength(8)])],
       cPassword: ['', Validators.compose([Validators.required, Validators.minLength(8)])],
@@ -38,9 +44,9 @@ export class RegisterPage {
     })
     this.allUsers = {};
     this.obtainAllRoles();
-    this.obtainAllUsers();    
+    this.obtainAllUsers();   
+ 
   }
-  
 
   ionViewDidLoad() {
     this.obtainAllRoles();
@@ -101,7 +107,9 @@ export class RegisterPage {
         user_id : Guid.create().toString(),
         user_state_id : this.newUser.value.user_state_id
       }
-      console.log(createdUser)
+      this.firebase.createUser(createdUser);
+      this.saveQrCode(createdUser)
+      this.goToHome(createdUser.role_id);
     }
   }
 
@@ -127,6 +135,76 @@ export class RegisterPage {
       this.newUser.value.user_state_id = "5058ea0c-3e21-4698-bd91-5f9a891caceb" //Inhabiltado
     } else {
       this.newUser.value.user_state_id = "2103d550-17c2-4ff5-9b61-73e7f4ea6a7f" //Habilitado
+    }
+  }
+
+  checkEmptyPassword(){
+    this.passwordErrorMessage = false
+    this.cPasswordErrorMessage = false
+    let valuePassword = this.newUser.value.password
+    let valuecPassword = this.newUser.value.cPassword
+
+    if(valuePassword.length < 8){
+      this.passwordErrorMessage = true
+    }else {
+      this.passwordErrorMessage = false
+    }
+
+    if(valuecPassword.length < 8){
+      this.cPasswordErrorMessage = true
+    }else {
+      this.cPasswordErrorMessage = false
+    }
+  }
+
+  setValidatorsForMedicalLicense(){
+    if(this.newUser.value.role_id == "37a938a1-e7f0-42c2-adeb-b8a9a36b6cb8"){
+      this.newUser.controls["license"].setValidators([Validators.required])
+      this.newUser.get("license").updateValueAndValidity();
+    }else if (this.newUser.value.role_id == "bd94bc0d-53d6-47e0-8bf6-95fc63b28a93"){
+      this.newUser.value.license = "";
+      this.newUser.get("license").clearValidators();
+      this.newUser.get("license").updateValueAndValidity();
+    }
+  }
+  goToHome(role_id){
+    if (role_id == "37a938a1-e7f0-42c2-adeb-b8a9a36b6cb8"){ //Doctores
+      let message = "El Ministerio de salud deberá habilitar tu registro en no menos de 48 horas, te avisaremos una vez el Ministerio habilite tu registro";
+      this.showPrompt(message);
+    }else if (role_id == "bd94bc0d-53d6-47e0-8bf6-95fc63b28a93"){ //Farmacias
+      let message = "Por favor ingresa nuevamente tus datos para acceder a la aplicación";
+      this.showPrompt(message);
+    }
+  }
+
+  showPrompt(message) {
+    const alert = this.alertCtrl.create({
+      title: '¡Gracias por registrarte!',
+      subTitle: message,
+      buttons: ['OK']
+    });
+    alert.present();
+    this.navCtrl.push(LoginPage);
+  }
+
+  saveQrCode(user) {
+
+    if(user.role_id == "37a938a1-e7f0-42c2-adeb-b8a9a36b6cb8"){
+      let todaysDate = new Date().toLocaleDateString();
+      this.createdQrCode = Guid.create().toString();
+
+      var image = this.createdQrCode;
+      image = image.slice(10,-2);
+
+      var qr_code = {
+        "id": this.createdQrCode,
+        "creation_date": todaysDate,
+        "image": image,
+        "modification_date": todaysDate,
+        "qr_state_id": "57cc0115-360b-4af3-ad5d-da275d6243d3",
+        "user_id": user.user_id
+      }
+      this.firebase.createQR(qr_code);
     }
   }
 

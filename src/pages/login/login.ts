@@ -8,6 +8,7 @@ import { RegisterPage } from '../register/register';
 import {Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { BrMaskerModule } from 'brmasker-ionic-3';
 import { AlertController } from 'ionic-angular';
+import {Md5} from 'ts-md5/dist/md5';
 
 
 @IonicPage()
@@ -77,6 +78,7 @@ export class LoginPage {
     } 
 
     if(this.errorMessage != "El usuario indicado no existe"){
+      this.loggedUser.value.password = Md5.hashStr(this.loggedUser.value.password)
       if(this.loggedUser.value.password == this.correctUser.password){
         if(this.correctUser.user_state_id == "2103d550-17c2-4ff5-9b61-73e7f4ea6a7f"){//Usuario habilitado
           if(this.loggedUser.value.role == this.correctUser.role_id){
@@ -95,7 +97,7 @@ export class LoginPage {
           }
         }else {
           this.errorMessage = null;
-          this.errorMessage = "Los datos ingresados no son correctos"
+          this.errorMessage = "El usuario que has ingresado aún no ha sido habilitado; por favor contáctate con nuestra área de Atención al cliente"
         }
       }else{
         this.errorMessage = null;
