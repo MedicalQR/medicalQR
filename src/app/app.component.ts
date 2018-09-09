@@ -12,8 +12,12 @@ import { HomeDoctorsPage } from '../pages/home-doctors/home-doctors';
 import { HomeMinistryPage } from '../pages/home-ministry/home-ministry';
 import { HomePharmacyPage } from '../pages/home-pharmacy/home-pharmacy';
 import { ModalDoctorPage } from '../pages/modal-doctor/modal-doctor';
+<<<<<<< HEAD
+import { RegisterPage } from '../pages/register/register';
+=======
 import { ModalQrPage } from '../pages/modal-qr/modal-qr';
 
+>>>>>>> d83a08c393efa9c4b77d3edc1f65e25fcdd5abed
 
 @Component({
   templateUrl: 'app.html'

@@ -12,6 +12,7 @@ import { HomePharmacyPage } from '../pages/home-pharmacy/home-pharmacy';
 import { HomeMinistryPage } from '../pages/home-ministry/home-ministry';
 import { NewQrPage } from '../pages/new-qr/new-qr';
 import { ModalDoctorPage } from '../pages/modal-doctor/modal-doctor';
+import { RegisterPage } from '../pages/register/register';
 import { ModalQrPage } from '../pages/modal-qr/modal-qr';
 
 import { StatusBar } from '@ionic-native/status-bar';
@@ -21,6 +22,7 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { DatabaseServiceProvider } from '../providers/database-service/database-service';
+import { BrMaskerModule } from 'brmasker-ionic-3';
 
 import { NgxQRCodeModule } from 'ngx-qrcode2';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
@@ -50,6 +52,8 @@ var config = {
     HomeDoctorsPage,
     HomePharmacyPage,
     HomeMinistryPage,
+    ModalDoctorPage,
+    RegisterPage,
     NewQrPage,
     ModalDoctorPage,
     ModalQrPage
@@ -60,6 +64,7 @@ var config = {
     AngularFireModule.initializeApp(config,'medicalqr'),
     AngularFireDatabaseModule,
     AngularFirestoreModule,
+    BrMaskerModule,
     NgxQRCodeModule
   ],
   bootstrap: [IonicApp],
@@ -72,6 +77,8 @@ var config = {
     HomeDoctorsPage,
     HomePharmacyPage,
     HomeMinistryPage,
+    ModalDoctorPage,
+    RegisterPage,
     NewQrPage,
     ModalDoctorPage,
     ModalQrPage

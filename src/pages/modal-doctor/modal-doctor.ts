@@ -36,7 +36,7 @@ export class ModalDoctorPage {
 
     obtainAllDoctors(){
         this.allDoctors = null;
-        this.firebase.getAllDoctors().valueChanges().subscribe(
+        this.firebase.getAllUsers().valueChanges().subscribe(
           doctors => {
             this.allDoctors = doctors;
             this.id = this.params.get('user_id');      

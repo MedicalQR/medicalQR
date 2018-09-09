@@ -22,12 +22,13 @@ constructor(public firebase: AngularFireDatabase) {}
     return this.firebase.list('qrs-states/' + state_id);
   }
 
+  
   getQRById(qr_id) {
     return this.firebase.list('qrs/',
       ref => ref.orderByChild('id').equalTo(qr_id));
   }
 
-  getAllDoctors() {
+  getAllUsers() {
     return this.firebase.list('users/');
   }
 
@@ -50,6 +51,10 @@ constructor(public firebase: AngularFireDatabase) {}
     this.firebase.database.ref('users/' + doctor.user_id).set(doctor);
   }
 
+  getRoles(){
+    return this.firebase.list('roles/');
+  }
+  
   editQRState(qr){
     this.firebase.database.ref('qrs/' + qr.id).set(qr);
   }

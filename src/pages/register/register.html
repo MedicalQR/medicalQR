@@ -14,5 +14,53 @@
 
 
 <ion-content padding>
+    <form [formGroup]="newUser" (ngSubmit)="registerForm()" class="login-form">
 
+        <ion-item>
+          <ion-label color="dark-yellow">
+            Tipo de usuario
+          </ion-label>
+            <ion-select formControlName="role_id">
+              <!--<ion-option *ngFor="let role of allRoles" value="{{role.roles_id}}">{{role.name}}</ion-option>-->
+          </ion-select>
+        </ion-item>
+        
+        
+        <ion-item>
+          <ion-label color="dark-yellow">
+            Nombre 
+          </ion-label>
+          <ion-input type="text" formControlName="name"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label color="dark-yellow">
+            CUIT/CUIL 
+          </ion-label>
+          <ion-input type="text" [brmasker]="{mask:'00-00000000-0', len:13, type:'num'}" value="30-11111111-8" formControlName="document"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label color="dark-yellow">
+            Password
+          </ion-label>
+          <ion-input type="password" name = "password" formControlName="password"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label color="dark-yellow">
+            Confirmar Password
+          </ion-label>
+          <ion-input type="password" name = "cPassword" formControlName="cPassword"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label color="dark-yellow">
+            Licencia médica
+          </ion-label>
+          <ion-input type="license" name = "license" formControlName="license"></ion-input>
+        </ion-item>
+
+        <button ion-button full color="darken-blue" type="submit" [disabled]="!newUser.valid">Login</button>
+      </form>
 </ion-content>
