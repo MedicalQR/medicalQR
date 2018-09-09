@@ -33,8 +33,11 @@ export class LoginPage {
     //this.navCtrl.push(HomeDoctorsPage);
     if(this.user.mail == "1"){
       this.navCtrl.push(HomeMinistryPage);
-    }else{
+    }else if(this.user.mail == "2") {
       this.navCtrl.push(HomeDoctorsPage);
+    }
+    else {
+      this.navCtrl.push(HomePharmacyPage);
     }
   }
 
