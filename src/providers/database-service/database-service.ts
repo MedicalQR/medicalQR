@@ -84,4 +84,9 @@ constructor(public firebase: AngularFireDatabase) {}
   createUser(user){
     this.firebase.database.ref('users/' + user.user_id).set(user);
   }
+
+  getUserById(id) {
+    return this.firebase.list('users/',
+    ref => ref.orderByChild('user_id').equalTo(id));
+  }
 }

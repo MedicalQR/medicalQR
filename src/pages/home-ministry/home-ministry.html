@@ -4,38 +4,40 @@
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
 -->
+
 <ion-header>
 
-  <ion-navbar>
+  <ion-navbar hideBackButton>
     <ion-title>Ministerio de salud</ion-title>
   </ion-navbar>
+
   <ion-toolbar>
-      <ion-segment [(ngModel)]="icons" color="primary">
-        <ion-segment-button value="pending" (click)="showDoctors('pending')">
-          Pendientes
-        </ion-segment-button>
-        <ion-segment-button value="enabled" (click)="showDoctors('enabled')">
-          Habilitados
-        </ion-segment-button>
-        <ion-segment-button value="disabled" (click)="showDoctors('disabled')">
-          Deshabilitados
-        </ion-segment-button>
-      </ion-segment>
-    </ion-toolbar>
+    <ion-segment [(ngModel)]="icons" color="primary">
+      <ion-segment-button value="pending" (click)="showDoctors('pending')">
+        Pendientes
+      </ion-segment-button>
+      <ion-segment-button value="enabled" (click)="showDoctors('enabled')">
+        Habilitados
+      </ion-segment-button>
+      <ion-segment-button value="disabled" (click)="showDoctors('disabled')">
+        Deshabilitados
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
 
 </ion-header>
 
 <ion-content padding>
-      <ion-list>
-        <ion-item-sliding #item *ngFor="let doctor of doctors">
-          <ion-item>
-            {{doctor.name}} 
-          </ion-item>      
-          <ion-item-options side="right">
-            <button ion-button color="secondary" (click)="openModal({user_id: doctor.user_id})">Información</button>
-            <button *ngIf="doctor.user_state_id!=='2103d550-17c2-4ff5-9b61-73e7f4ea6a7f'" ion-button color="success" (click)="enable(doctor)">Habilitar</button>
-            <button *ngIf="doctor.user_state_id!=='5058ea0c-3e21-4698-bd91-5f9a891caceb'" ion-button color="danger" (click)="disable(doctor)">Inhabilitar</button>
-          </ion-item-options>
-        </ion-item-sliding>
-      </ion-list>      
+  <ion-list>
+    <ion-item-sliding #item *ngFor="let doctor of doctors">
+      <ion-item>
+        {{doctor.name}} 
+      </ion-item>      
+      <ion-item-options side="right">
+        <button ion-button color="secondary" (click)="openModal({user_id: doctor.user_id})">Información</button>
+        <button *ngIf="doctor.user_state_id!=='2103d550-17c2-4ff5-9b61-73e7f4ea6a7f'" ion-button color="success" (click)="enable(doctor)">Habilitar</button>
+        <button *ngIf="doctor.user_state_id!=='5058ea0c-3e21-4698-bd91-5f9a891caceb'" ion-button color="danger" (click)="disable(doctor)">Inhabilitar</button>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>      
 </ion-content>

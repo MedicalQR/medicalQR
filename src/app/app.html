@@ -1,15 +1,21 @@
-<ion-menu [content]="content">
+<ion-menu id="myMenu" [content]="content">
 
   <ion-header>
     <ion-toolbar>
-      <ion-title>Pages</ion-title>
+      <ion-title>Menú</ion-title>
     </ion-toolbar>
   </ion-header>
 
   <ion-content>
     <ion-list>
-      <button ion-item *ngFor="let p of pages" (click)="openPage(p)">
-        {{p.title}}
+      <button ion-item (click)="openHome()">
+        Inicio
+      </button>
+      <button ion-item (click)="openProfile()">
+        Perfil de usuario
+      </button>
+      <button ion-item (click)="closeSession()">
+        Cerrar sesión
       </button>
     </ion-list>
   </ion-content>

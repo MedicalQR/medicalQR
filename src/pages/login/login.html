@@ -21,7 +21,7 @@
         <ion-label color="dark-yellow">
           CUIT/CUIL 
         </ion-label>
-        <ion-input type="text" [brmasker]="{mask:'00-00000000-0', len:13, type:'num'}" value="30-11111111-9" formControlName="document"></ion-input>
+        <ion-input type="text" [brmasker]="{mask:'00-00000000-0', len:13, type:'num'}" formControlName="document"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label color="dark-yellow">
@@ -33,7 +33,7 @@
     </form>
 
     <p ion-text color="light" >Did you forget your password?
-        <a (click)="register()" ion-text color="secondary">
+        <a (click)="recoveryPassword()" ion-text color="secondary">
           <br>Recover password
         </a>
     </p>

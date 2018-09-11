@@ -10,7 +10,7 @@ export class ModalDoctorPage {
     
     doctor;
     allDoctors : any;
-    id;
+    selectedDoctorsId;
   
     constructor(
       public platform: Platform,
@@ -18,7 +18,7 @@ export class ModalDoctorPage {
       public viewCtrl: ViewController,
       public firebase: DatabaseServiceProvider
     ) {
-        this.id = this.params.get('user_id');    
+        this.selectedDoctorsId = this.params.get('user_id');    
         
         var doc = { } 
 
@@ -39,11 +39,16 @@ export class ModalDoctorPage {
         this.firebase.getAllUsers().valueChanges().subscribe(
           doctors => {
             this.allDoctors = doctors;
-            this.id = this.params.get('user_id');      
+            this.selectedDoctorsId = this.params.get('user_id');      
             
             this.allDoctors.forEach(doctor => {
-                if(this.id == doctor.user_id){
+                if(this.selectedDoctorsId == doctor.user_id){
                     this.doctor = doctor;
+                    this.doctor.document.toString();
+                    let first2 = this.doctor.document.slice(0, 2);
+                    let last1 = this.doctor.document.slice(10,11);
+                    let middle = this.doctor.document.slice(2, 9);
+                    this.doctor.document = first2 + "-" + middle + "-" + last1
                 }
             });
         })

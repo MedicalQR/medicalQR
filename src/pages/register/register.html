@@ -24,7 +24,17 @@
               <ion-option *ngFor="let role of allRoles" value="{{role.roles_id}}">{{role.name}}</ion-option>
           </ion-select>
         </ion-item>
+
+        <ion-item>
+          <ion-label color="dark-yellow">
+            e-mail 
+          </ion-label>
+          <ion-input type="email" formControlName="email"></ion-input>
+        </ion-item>       
         
+        <ion-item *ngIf="newUser.controls.email.dirty && newUser.controls.email.hasError('email')">
+          <p>e-mail inválido</p>
+        </ion-item>
         
         <ion-item>
           <ion-label color="dark-yellow">
@@ -37,7 +47,11 @@
           <ion-label color="dark-yellow">
             CUIT/CUIL 
           </ion-label>
-          <ion-input type="text" [brmasker]="{mask:'00-00000000-0', len:13, type:'num'}" value="30-11111111-8" formControlName="document"></ion-input>
+          <ion-input type="text" [brmasker]="{mask:'00-00000000-0', len:13, type:'num'}" formControlName="document"></ion-input>
+        </ion-item>
+
+        <ion-item *ngIf="newUser.controls.document.hasError('minlength')">
+          <p>CUIT/CUIL incorrecto</p>
         </ion-item>
 
         <ion-item>

@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { ModalController, IonicPage, NavController, NavParams } from 'ionic-angular';
+import { ModalController, IonicPage, MenuController, NavController, NavParams } from 'ionic-angular';
 import { DatabaseServiceProvider } from '../../providers/database-service/database-service';
 import {ModalDoctorPage} from '../modal-doctor/modal-doctor';
+import {ChangePasswordPage} from '../change-password/change-password';
 
 /**
  * Generated class for the HomeMinistryPage page.
@@ -19,7 +20,8 @@ export class HomeMinistryPage {
 
   doctors: any;
 
-  constructor(public modalCtrl: ModalController, public navCtrl: NavController, public navParams: NavParams, public firebase: DatabaseServiceProvider) {
+  constructor(public menuCtrl: MenuController, public modalCtrl: ModalController, public navCtrl: NavController, public navParams: NavParams, public firebase: DatabaseServiceProvider) {
+    this.menuCtrl.enable(true, 'myMenu');
   }
 
   openModal(user_id) {
@@ -31,13 +33,14 @@ export class HomeMinistryPage {
   ionViewDidLoad() {
     //console.log('ionViewDidLoad HomeMinistryPage');
     this.obtainPendingDoctors();
+    this.menuCtrl.enable(true, 'myMenu');
   }
 
   obtainEnabledDoctors(){
     this.doctors = null;
     this.firebase.getEnabledDoctors().valueChanges().subscribe(
       doctors => {
-        this.doctors = doctors;
+        this.doctors = this.filterUsersbyRole(doctors);
     })
   }
 
@@ -45,7 +48,7 @@ export class HomeMinistryPage {
     this.doctors = null;
     this.firebase.getDisabledDoctors().valueChanges().subscribe(
       doctors => {
-        this.doctors = doctors;
+        this.doctors = this.filterUsersbyRole(doctors);
     })
   }
 
@@ -53,8 +56,18 @@ export class HomeMinistryPage {
     this.doctors = null;
     this.firebase.getPendingDoctors().valueChanges().subscribe(
       doctors => {
-        this.doctors = doctors;        
+        this.doctors = this.filterUsersbyRole(doctors);     
     })
+  }
+
+  filterUsersbyRole(tempDoctors){
+    let filterDoctors = [];
+    for (let i = 0; i < tempDoctors.length; i++) {
+      if(tempDoctors[i].role_id == "37a938a1-e7f0-42c2-adeb-b8a9a36b6cb8"){
+        filterDoctors.push(tempDoctors[i])
+      }
+    };
+    return filterDoctors;
   }
 
   showDoctors(selectedButton){
@@ -67,7 +80,6 @@ export class HomeMinistryPage {
     else {
       this.obtainPendingDoctors();
     }
-    console.log(this.doctors);
   }
 
   enable(doctor){

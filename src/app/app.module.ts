@@ -14,6 +14,7 @@ import { NewQrPage } from '../pages/new-qr/new-qr';
 import { ModalDoctorPage } from '../pages/modal-doctor/modal-doctor';
 import { RegisterPage } from '../pages/register/register';
 import { ModalQrPage } from '../pages/modal-qr/modal-qr';
+import { ChangePasswordPage } from '../pages/change-password/change-password';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -29,6 +30,8 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 
 import { Guid } from "guid-typescript";
 import { ModalPharmacyPage } from '../pages/modal-pharmacy/modal-pharmacy';
+import { UserProfilePage } from '../pages/user-profile/user-profile';
+import { GlobalDataProvider } from '../providers/global-data/global-data';
 
 
 
@@ -58,7 +61,9 @@ var config = {
     NewQrPage,
     ModalDoctorPage,
     ModalQrPage,
-    ModalPharmacyPage
+    ModalPharmacyPage,
+    ChangePasswordPage,
+    UserProfilePage
   ],
   imports: [
     BrowserModule,
@@ -84,7 +89,9 @@ var config = {
     NewQrPage,
     ModalDoctorPage,
     ModalQrPage,
-    ModalPharmacyPage
+    ModalPharmacyPage,
+    ChangePasswordPage,
+    UserProfilePage
   ],
   providers: [
     StatusBar,
@@ -92,7 +99,7 @@ var config = {
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     DatabaseServiceProvider,
     BarcodeScanner,
-    
+    GlobalDataProvider
   ]
 })
 export class AppModule {}
