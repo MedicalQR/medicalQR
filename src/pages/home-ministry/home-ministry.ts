@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ModalController, IonicPage, NavController, NavParams } from 'ionic-angular';
 import { DatabaseServiceProvider } from '../../providers/database-service/database-service';
 import {ModalDoctorPage} from '../modal-doctor/modal-doctor';
+import {ChangePasswordPage} from '../change-password/change-password';
 
 /**
  * Generated class for the HomeMinistryPage page.

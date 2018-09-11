@@ -14,6 +14,7 @@ import { HomePharmacyPage } from '../pages/home-pharmacy/home-pharmacy';
 import { ModalDoctorPage } from '../pages/modal-doctor/modal-doctor';
 import { RegisterPage } from '../pages/register/register';
 import { ModalQrPage } from '../pages/modal-qr/modal-qr';
+import { ChangePasswordPage } from '../pages/change-password/change-password';
 
 
 @Component({

@@ -24,7 +24,17 @@
               <ion-option *ngFor="let role of allRoles" value="{{role.roles_id}}">{{role.name}}</ion-option>
           </ion-select>
         </ion-item>
+
+        <ion-item>
+          <ion-label color="dark-yellow">
+            e-mail 
+          </ion-label>
+          <ion-input type="email" formControlName="email"></ion-input>
+        </ion-item>       
         
+        <ion-item *ngIf="newUser.controls.email.dirty && newUser.controls.email.hasError('email')">
+          <p>e-mail inválido</p>
+        </ion-item>
         
         <ion-item>
           <ion-label color="dark-yellow">

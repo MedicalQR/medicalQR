@@ -46,9 +46,9 @@ export class ModalDoctorPage {
                     this.doctor = doctor;
                     this.doctor.document.toString();
                     let first2 = this.doctor.document.slice(0, 2);
-                    let last2 = this.doctor.document.slice(9,11);
+                    let last1 = this.doctor.document.slice(10,11);
                     let middle = this.doctor.document.slice(2, 9);
-                    this.doctor.document = first2 + "-" + middle + "-" + last2
+                    this.doctor.document = first2 + "-" + middle + "-" + last1
                 }
             });
         })

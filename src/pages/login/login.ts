@@ -5,10 +5,11 @@ import { HomeDoctorsPage } from '../home-doctors/home-doctors';
 import { HomePharmacyPage } from '../home-pharmacy/home-pharmacy';
 import { HomeMinistryPage } from '../home-ministry/home-ministry';
 import { RegisterPage } from '../register/register';
-import {Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { BrMaskerModule } from 'brmasker-ionic-3';
 import { AlertController } from 'ionic-angular';
 import {Md5} from 'ts-md5/dist/md5';
+import {ChangePasswordPage} from '../change-password/change-password';
 
 
 @IonicPage()
@@ -74,7 +75,10 @@ export class LoginPage {
         this.correctUser = this.allUsers[i];
         break;
       }else{
-        this.errorMessage = "Los datos ingresados no son correctos"
+        this.errorMessage = {
+          tittle: "¡Error!",
+          subtittle: "Los datos ingresados no son correctos"
+        }
       }
     } 
 
@@ -95,15 +99,24 @@ export class LoginPage {
             }
           }else{  
             this.errorMessage = null;
-            this.errorMessage = "Los datos ingresados no son correctos"
+            this.errorMessage = {
+              tittle: "¡Error!",
+              subtittle: "Los datos ingresados no son correctos"
+            }
           }
         }else {
           this.errorMessage = null;
-          this.errorMessage = "El usuario que has ingresado aún no ha sido habilitado; por favor contáctate con nuestra área de Atención al cliente"
+          this.errorMessage =  {
+            tittle: "¡Error!",
+            subtittle: "El usuario que has ingresado aún no ha sido habilitado; por favor contáctate con nuestra área de Atención al cliente"
+          }
         }
       }else{
         this.errorMessage = null;
-        this.errorMessage = "Los datos ingresados no son correctos"
+        this.errorMessage =  {
+          tittle: "¡Error!",
+          subtittle: "Los datos ingresados no son correctos"
+        }
       } 
     }   
 
@@ -112,10 +125,10 @@ export class LoginPage {
     }
   }
 
-  showPrompt(errorMessage) {
+  showPrompt(message) {
     const alert = this.alertCtrl.create({
-      title: '¡Error!',
-      subTitle: errorMessage,
+      title: message.tittle,
+      subTitle: message.subtittle,
       buttons: ['OK']
     });
     alert.present();
@@ -123,6 +136,36 @@ export class LoginPage {
 
   register() {
     this.navCtrl.push(RegisterPage);
+  }
+
+  recoveryPassword() {
+    let message = null;
+    if(this.loggedUser.value.document == null || this.loggedUser.value.document.length <= 0){
+      message =  {
+        tittle: "¡Error!",
+        subtittle: "Indica un CUIT/CUIL por favor"
+      }
+    } else {
+      this.loggedUser.value.document = this.loggedUser.value.document.replace('-', '');
+      this.loggedUser.value.document = this.loggedUser.value.document.replace('-', '');
+      this.loggedUser.value.document = this.loggedUser.value.document.toString();
+      for (let i = 0; i < this.allUsers.length; i++) {
+        if(this.allUsers[i].document == this.loggedUser.value.document){
+          message =  {
+            tittle: "¡Alerta!",
+            subtittle: "Se ha enviado un correo electrónico con tu nueva contraseña al e-mail que indicaste en tu formulario de registro"
+          }
+          break;
+        }
+      }
+      if (message == null){
+        message =  {
+          tittle: "¡Error!",
+          subtittle: "Indica un CUIT/CUIL válido"
+        }
+      }
+    }
+    this.showPrompt(message)
   }
 } 
 

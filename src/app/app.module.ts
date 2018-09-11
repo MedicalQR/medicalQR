@@ -14,6 +14,7 @@ import { NewQrPage } from '../pages/new-qr/new-qr';
 import { ModalDoctorPage } from '../pages/modal-doctor/modal-doctor';
 import { RegisterPage } from '../pages/register/register';
 import { ModalQrPage } from '../pages/modal-qr/modal-qr';
+import { ChangePasswordPage } from '../pages/change-password/change-password';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -56,7 +57,8 @@ var config = {
     RegisterPage,
     NewQrPage,
     ModalDoctorPage,
-    ModalQrPage
+    ModalQrPage,
+    ChangePasswordPage
   ],
   imports: [
     BrowserModule,
@@ -81,7 +83,8 @@ var config = {
     RegisterPage,
     NewQrPage,
     ModalDoctorPage,
-    ModalQrPage
+    ModalQrPage,
+    ChangePasswordPage
   ],
   providers: [
     StatusBar,
