@@ -14,6 +14,8 @@ import { HomePharmacyPage } from '../pages/home-pharmacy/home-pharmacy';
 import { ModalDoctorPage } from '../pages/modal-doctor/modal-doctor';
 import { RegisterPage } from '../pages/register/register';
 import { ModalQrPage } from '../pages/modal-qr/modal-qr';
+import { UserProfilePage } from '../pages/user-profile/user-profile';
+import { GlobalDataProvider } from '../providers/global-data/global-data';
 
 
 @Component({
@@ -25,20 +27,21 @@ export class MyApp {
   // make HelloIonicPage the root (or first) page
   rootPage = LoginPage;
   pages: Array<{title: string, component: any}>;
+  actualView: any;
 
   constructor(
     public platform: Platform,
     public menu: MenuController,
     public statusBar: StatusBar,
-    public splashScreen: SplashScreen
+    public splashScreen: SplashScreen,
+    public globalDataCtrl: GlobalDataProvider,
   ) {
     this.initializeApp();
-
     // set our app's pages
     this.pages = [
-      { title: 'Hello Ionic', component: HelloIonicPage },
-      { title: 'My First List', component: ListPage }
     ];
+
+    //this.actualView = this.nav.getActive().name;
   }
 
   initializeApp() {
@@ -50,10 +53,29 @@ export class MyApp {
     });
   }
 
+  openHome(){
+    this.actualView = this.nav.getActive();
+    // close the menu when clicking a link from the menu
+    this.menu.close();
+    // navigate to the new page if it is not the current page
+    this.nav.setRoot(this.actualView.component);
+  }
+
+  openProfile(){
+    this.menu.close();
+    this.nav.setRoot(UserProfilePage);
+  }
+
   openPage(page) {
     // close the menu when clicking a link from the menu
     this.menu.close();
     // navigate to the new page if it is not the current page
     this.nav.setRoot(page.component);
+  }
+
+  closeSession(){
+    this.menu.close();
+    this.globalDataCtrl.setUser_id("");
+    this.nav.setRoot(LoginPage);
   }
 }

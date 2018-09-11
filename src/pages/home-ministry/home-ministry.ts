@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ModalController, IonicPage, NavController, NavParams } from 'ionic-angular';
+import { ModalController, IonicPage, MenuController, NavController, NavParams } from 'ionic-angular';
 import { DatabaseServiceProvider } from '../../providers/database-service/database-service';
 import {ModalDoctorPage} from '../modal-doctor/modal-doctor';
 
@@ -19,7 +19,8 @@ export class HomeMinistryPage {
 
   doctors: any;
 
-  constructor(public modalCtrl: ModalController, public navCtrl: NavController, public navParams: NavParams, public firebase: DatabaseServiceProvider) {
+  constructor(public menuCtrl: MenuController, public modalCtrl: ModalController, public navCtrl: NavController, public navParams: NavParams, public firebase: DatabaseServiceProvider) {
+    this.menuCtrl.enable(true, 'myMenu');
   }
 
   openModal(user_id) {
@@ -31,6 +32,7 @@ export class HomeMinistryPage {
   ionViewDidLoad() {
     //console.log('ionViewDidLoad HomeMinistryPage');
     this.obtainPendingDoctors();
+    this.menuCtrl.enable(true, 'myMenu');
   }
 
   obtainEnabledDoctors(){

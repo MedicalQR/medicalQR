@@ -28,6 +28,8 @@ import { NgxQRCodeModule } from 'ngx-qrcode2';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 
 import { Guid } from "guid-typescript";
+import { UserProfilePage } from '../pages/user-profile/user-profile';
+import { GlobalDataProvider } from '../providers/global-data/global-data';
 
 
 
@@ -56,7 +58,8 @@ var config = {
     RegisterPage,
     NewQrPage,
     ModalDoctorPage,
-    ModalQrPage
+    ModalQrPage,
+    UserProfilePage
   ],
   imports: [
     BrowserModule,
@@ -81,14 +84,16 @@ var config = {
     RegisterPage,
     NewQrPage,
     ModalDoctorPage,
-    ModalQrPage
+    ModalQrPage,
+    UserProfilePage
   ],
   providers: [
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     DatabaseServiceProvider,
-    BarcodeScanner
+    BarcodeScanner,
+    GlobalDataProvider
   ]
 })
 export class AppModule {}
