@@ -7,12 +7,33 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>user-profile</ion-title>
+    <ion-title>Perfil de usuario</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
-
+  <ion-content>
+      <ion-list>  
+          <ion-item>
+            Nombre
+            <ion-note item-end>
+              {{loggedUser.name}}
+            </ion-note>
+          </ion-item>
+          <ion-item>
+            Licencia médica
+            <ion-note item-end>
+              {{loggedUser.license}}
+            </ion-note>
+          </ion-item>
+          <ion-item>
+            CUIL
+            <ion-note item-end>
+              {{loggedUser.document}}
+            </ion-note>
+          </ion-item>
+      </ion-list>
+    </ion-content>
 </ion-content>

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, MenuController, NavParams } from 'ionic-angular';
 import { DatabaseServiceProvider } from '../../providers/database-service/database-service';
 import { HomeDoctorsPage } from '../home-doctors/home-doctors';
 import { HomePharmacyPage } from '../home-pharmacy/home-pharmacy';
@@ -10,6 +10,7 @@ import { BrMaskerModule } from 'brmasker-ionic-3';
 import { AlertController } from 'ionic-angular';
 import {Md5} from 'ts-md5/dist/md5';
 import {ChangePasswordPage} from '../change-password/change-password';
+import { GlobalDataProvider } from '../../providers/global-data/global-data';
 
 
 @IonicPage()
@@ -27,12 +28,13 @@ export class LoginPage {
   errorMessage : any;
   private todo : FormGroup;
 
-  constructor(public alertCtrl: AlertController, public navCtrl: NavController, public navParams: NavParams, public firebase: DatabaseServiceProvider, private formBuilder: FormBuilder) {
+  constructor(public menuCtrl: MenuController, public alertCtrl: AlertController, public navCtrl: NavController, public navParams: NavParams, public firebase: DatabaseServiceProvider, private formBuilder: FormBuilder,  public globalDataCtrl: GlobalDataProvider) {
     this.loggedUser = this.formBuilder.group({
       document: ['', Validators.required],
       password: ['', Validators.required],
       role : ['', Validators.required],
     });
+    this.menuCtrl.enable(false, 'myMenu');
     this.allUsers = {};
     this.allRoles = [];
     this.obtainAllUsers();
@@ -87,7 +89,7 @@ export class LoginPage {
       if(this.loggedUser.value.password == this.correctUser.password){
         if(this.correctUser.user_state_id == "2103d550-17c2-4ff5-9b61-73e7f4ea6a7f"){//Usuario habilitado
           if(this.loggedUser.value.role == this.correctUser.role_id){
-            console.log(this.correctUser.role_id)
+            this.globalDataCtrl.setUser_id(this.correctUser.user_id);
             if (this.correctUser.role_id == "37a938a1-e7f0-42c2-adeb-b8a9a36b6cb8"){ //Doctores
               this.navCtrl.push(HomeDoctorsPage, {
                 id: this.correctUser.user_id
