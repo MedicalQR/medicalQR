@@ -28,6 +28,7 @@ import { NgxQRCodeModule } from 'ngx-qrcode2';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 
 import { Guid } from "guid-typescript";
+import { ModalPharmacyPage } from '../pages/modal-pharmacy/modal-pharmacy';
 
 
 
@@ -56,7 +57,8 @@ var config = {
     RegisterPage,
     NewQrPage,
     ModalDoctorPage,
-    ModalQrPage
+    ModalQrPage,
+    ModalPharmacyPage
   ],
   imports: [
     BrowserModule,
@@ -81,7 +83,8 @@ var config = {
     RegisterPage,
     NewQrPage,
     ModalDoctorPage,
-    ModalQrPage
+    ModalQrPage,
+    ModalPharmacyPage
   ],
   providers: [
     StatusBar,

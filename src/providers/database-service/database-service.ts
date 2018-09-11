@@ -28,6 +28,11 @@ constructor(public firebase: AngularFireDatabase) {}
       ref => ref.orderByChild('id').equalTo(qr_id));
   }
 
+  getDoctorById(id) {
+    return this.firebase.list('users/',
+      ref => ref.orderByChild('user_id').equalTo(id));
+  }
+
   getAllUsers() {
     return this.firebase.list('users/');
   }
@@ -45,6 +50,11 @@ constructor(public firebase: AngularFireDatabase) {}
   getDisabledDoctors() {
     return this.firebase.list('users/',
       ref => ref.orderByChild('user_state_id').equalTo("5058ea0c-3e21-4698-bd91-5f9a891caceb"));
+  }
+
+  getDoctorStateById(user_state_id) {
+    return this.firebase.list('users_states/',
+      ref => ref.orderByChild('users_states_id').equalTo(user_state_id));
   }
 
   editDoctorState(doctor){
