@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController, MenuController} from 'ionic-angular';
 import { DatabaseServiceProvider } from '../../providers/database-service/database-service';
 import { NewQrPage } from '../new-qr/new-qr';
 import { ModalQrPage } from '../modal-qr/modal-qr';
+import { GlobalDataProvider } from '../../providers/global-data/global-data';
 
 @IonicPage()
 @Component({
@@ -14,27 +15,34 @@ export class HomeDoctorsPage {
   doctorId : any;
   qrs: any = [];
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public firebase: DatabaseServiceProvider, public modalCtrl: ModalController) {
-    this.doctorId = this.navParams.get("id");
+  constructor(public navCtrl: NavController, public navParams: NavParams, public firebase: DatabaseServiceProvider, public modalCtrl: ModalController,  public globalDataCtrl: GlobalDataProvider, public menuCtrl: MenuController) 
+  {
+    this.menuCtrl.enable(true, "myMenu");
   }
 
   ionViewDidLoad(){
-    this.doctorId = this.navParams.get("id");
+    this.doctorId = this.globalDataCtrl.getUser_id();
     this.obtainQRs("Pending");
+    this.menuCtrl.enable(true, "myMenu");
   }
 
   obtainQRs(state){
     let all_qrs = [];
     this.qrs = [];
-
+    console.log("obtainQRS");
+    console.log(this.doctorId);
     this.firebase.getAllQRsByDoctorId(this.doctorId).valueChanges().subscribe(
       qrs => {
         all_qrs = qrs; 
-        this.filterQRs(state, all_qrs);
+        console.log("all_qrs");
+        console.log(all_qrs);
+        if(all_qrs.length > 0)
+          this.filterQRs(state, all_qrs);
     })
   }
 
   filterQRs(state, all_qrs){
+    console.log("filter QRS");
     let qrs = [];
 
     for (let i = 0; i < all_qrs.length; i++) { 
