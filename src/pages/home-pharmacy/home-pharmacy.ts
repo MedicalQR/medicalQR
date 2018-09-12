@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController, MenuController } from 'ionic-angular';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { DatabaseServiceProvider } from '../../providers/database-service/database-service';
 import { ModalPharmacyPage } from '../modal-pharmacy/modal-pharmacy';
@@ -17,24 +17,29 @@ export class HomePharmacyPage {
   qr: any;
   doctor: any;
  
-  constructor(public navCtrl: NavController, public navParams: NavParams, private barcodeScanner: BarcodeScanner, public firebase: DatabaseServiceProvider, public modalCtrl: ModalController) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private barcodeScanner: BarcodeScanner, public firebase: DatabaseServiceProvider, public modalCtrl: ModalController, public menuCtrl: MenuController) 
+  {
+    this.menuCtrl.enable(true, "myMenu");
   }
 
-  ionViewDidLoad() {}
+  ionViewDidLoad() 
+  {
+    this.menuCtrl.enable(true, "myMenu");
+  }
 
   scanCode() {
-    /*this.barcodeScanner.scan().then(barcodeData => {
-      this.scannedCode = barcodeData.text;*/
-      this.scannedCode = "41ae233e-80f2-7467-58ec-540f8b2f7b50";
+    this.barcodeScanner.scan().then(barcodeData => {
+      this.scannedCode = barcodeData.text;
+      //this.scannedCode = "41ae233e-80f2-7467-58ec-540f8b2f7b50";
       this.firebase.getQRById(this.scannedCode).valueChanges().subscribe(
         qr => {
           this.qr = qr[0]; 
           this.getQRState();
       })
-    /*}, 
+    }, 
     (err) => {
         console.log('Error: ', err);
-    });*/
+    });
   }
   
   getQRState() {

@@ -57,36 +57,41 @@ constructor(public firebase: AngularFireDatabase) {}
       ref => ref.orderByChild('users_states_id').equalTo(user_state_id));
   }
 
-  editDoctorState(doctor){
-    this.firebase.database.ref('users/' + doctor.user_id).set(doctor);
+  getUserById(id) {
+    return this.firebase.list('users/',
+    ref => ref.orderByChild('user_id').equalTo(id));
   }
 
   getRoles(){
     return this.firebase.list('roles/');
   }
   
-  editQRState(qr){
-    this.firebase.database.ref('qrs/' + qr.id).set(qr);
-  }
-
-  createQR(qr){
-    this.firebase.database.ref('qrs/' + qr.id).set(qr);
-  }
-
-  editQR(qr){
-    this.firebase.database.ref('users/' + qr.id).set(qr);
-  }
-
   getAllUsersStates(){
     return this.firebase.list('users_states/');
+  }
+
+  getSecurityCodeByCode(code) {
+    return this.firebase.list('security_codes/',
+    ref => ref.orderByChild('code').equalTo(code));
   }
 
   createUser(user){
     this.firebase.database.ref('users/' + user.user_id).set(user);
   }
 
-  getUserById(id) {
-    return this.firebase.list('users/',
-    ref => ref.orderByChild('user_id').equalTo(id));
+  createQR(qr){
+    this.firebase.database.ref('qrs/' + qr.id).set(qr);
+  }
+
+  editDoctorState(doctor){
+    this.firebase.database.ref('users/' + doctor.user_id).set(doctor);
+  }
+
+  editQRState(qr){
+    this.firebase.database.ref('qrs/' + qr.id).set(qr);
+  }
+
+  editQR(qr){
+    this.firebase.database.ref('users/' + qr.id).set(qr);
   }
 }
