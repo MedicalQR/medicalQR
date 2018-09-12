@@ -32,7 +32,7 @@
         <p item-end>{{qr.state}}</p>
       </ion-item>   
       <ion-item-options side="right">
-        <button ion-button color="primary" (click)="openModal({qr_id: qr.id})">Información</button>
+        <button ion-button color="secondary" (click)="openModal({qr_id: qr.id})">Información</button>
         <button *ngIf="qr.qr_state_id!=='c815819f-a121-453a-8708-f8b0e1a70215'" ion-button color="success" (click)="enable(qr)">Habilitar</button>
         <button *ngIf="qr.qr_state_id!=='7923230e-9c35-4f93-9fb3-5e2634a0f5e1'" ion-button color="danger" (click)="disable(qr)">Inhabilitar</button>
       </ion-item-options>
