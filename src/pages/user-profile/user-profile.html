@@ -6,7 +6,7 @@
 -->
 <ion-header>
 
-  <ion-navbar>
+  <ion-navbar hideBackButton>
     <ion-title>Perfil de usuario</ion-title>
   </ion-navbar>
 
@@ -23,17 +23,24 @@
             </ion-note>
           </ion-item>
           <ion-item>
-            Licencia médica
-            <ion-note item-end>
-              {{loggedUser.license}}
-            </ion-note>
-          </ion-item>
-          <ion-item>
             CUIL
             <ion-note item-end>
               {{loggedUser.document}}
             </ion-note>
           </ion-item>
+          <ion-item>
+            e-mail
+            <ion-note item-end>
+              {{loggedUser.email}}
+            </ion-note>
+          </ion-item>
+          <ion-item *ngIf="loggedUser.role_id=='37a938a1-e7f0-42c2-adeb-b8a9a36b6cb8'">
+            Licencia médica
+            <ion-note item-end>
+              {{loggedUser.license}}
+            </ion-note>
+          </ion-item>
       </ion-list>
+      <button ion-button full color="secondary" (click)="goTo_changePage()">Cambiar contraseña</button>
     </ion-content>
 </ion-content>

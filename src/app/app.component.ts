@@ -56,11 +56,10 @@ export class MyApp {
   }
 
   openHome(){
-    this.actualView = this.nav.getActive();
     // close the menu when clicking a link from the menu
     this.menu.close();
     // navigate to the new page if it is not the current page
-    this.nav.setRoot(this.actualView.component);
+    this.nav.setRoot(this.globalDataCtrl.getHomePage());
   }
 
   openProfile(){

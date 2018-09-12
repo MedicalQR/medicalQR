@@ -84,19 +84,22 @@ export class LoginPage {
       }
     } 
 
-    if(this.errorMessage != "El usuario indicado no existe"){
-      this.loggedUser.value.password = Md5.hashStr(this.loggedUser.value.password)
-      if(this.loggedUser.value.password == this.correctUser.password){
+    if(this.errorMessage != "Los datos ingresados no son correctos"){
+      let hashPass = Md5.hashStr(this.loggedUser.value.password)
+      if(hashPass == this.correctUser.password){
         if(this.correctUser.user_state_id == "2103d550-17c2-4ff5-9b61-73e7f4ea6a7f"){//Usuario habilitado
           if(this.loggedUser.value.role == this.correctUser.role_id){
             this.globalDataCtrl.setUser_id(this.correctUser.user_id);
             if (this.correctUser.role_id == "37a938a1-e7f0-42c2-adeb-b8a9a36b6cb8"){ //Doctores
+              this.globalDataCtrl.setHomePage(HomeDoctorsPage);
               this.navCtrl.push(HomeDoctorsPage, {
                 id: this.correctUser.user_id
               });
             }else if (this.correctUser.role_id == "35d0b156-e7be-4af1-a84d-3e9e30a2bd06"){ //Ministerio
+              this.globalDataCtrl.setHomePage(HomeMinistryPage);
               this.navCtrl.push(HomeMinistryPage);
             }else {
+              this.globalDataCtrl.setHomePage(HomePharmacyPage);
               this.navCtrl.push(HomePharmacyPage);
             }
           }else{  
@@ -110,7 +113,7 @@ export class LoginPage {
           this.errorMessage = null;
           this.errorMessage =  {
             tittle: "¡Error!",
-            subtittle: "El usuario que has ingresado aún no ha sido habilitado; por favor contáctate con nuestra área de Atención al cliente"
+            subtittle: "El usuario que has ingresado no se encuentra habilitado; por favor contáctate con nuestra área de Atención al cliente"
           }
         }
       }else{
@@ -134,7 +137,7 @@ export class LoginPage {
       buttons: ['OK']
     });
     alert.present();
-}
+  }
 
   register() {
     this.navCtrl.push(RegisterPage);

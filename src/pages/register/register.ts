@@ -30,7 +30,6 @@ export class RegisterPage {
   errorMessage : any;
   passwordErrorMessage : any;
   cPasswordErrorMessage : any;
-  createdQrCode = null;
 
   constructor(public alertCtrl: AlertController, public navCtrl: NavController, public navParams: NavParams, public firebase: DatabaseServiceProvider, private formBuilder: FormBuilder) {
     
