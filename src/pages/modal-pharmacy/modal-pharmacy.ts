@@ -41,8 +41,6 @@ export class ModalPharmacyPage {
     this.firebase.getQRById(this.id).valueChanges().subscribe(
       qr => {
         this.qr = qr[0]; 
-        console.log("This.Qr");
-        console.log(this.qr);
         this.getQRState();
     })
   }
@@ -51,8 +49,6 @@ export class ModalPharmacyPage {
     this.firebase.getStateById(this.qr.qr_state_id).valueChanges().subscribe(
       qr_state => {
         this.qr.state = qr_state[0];
-        console.log("This.Qr state ");
-        console.log(this.qr.state);
         this.getDoctorInformation();
     })
   }
@@ -61,8 +57,6 @@ export class ModalPharmacyPage {
     this.firebase.getDoctorById(this.qr.user_id).valueChanges().subscribe(
       doctor => {
         this.doctor = doctor[0];
-        console.log("doctor from modal");
-        console.log(this.doctor);
         this.getDoctorState();
     })
   }
@@ -75,7 +69,6 @@ export class ModalPharmacyPage {
   }
 
   checkPrescription() {
-    let result = false;
     if(this.info.date != "") {
       let splitDate = this.info.date.split("-");
       let yy = splitDate[0];
@@ -89,27 +82,33 @@ export class ModalPharmacyPage {
       this.firebase.getSecurityCodeByCode(this.info.code).valueChanges().subscribe(
         code => {
           this.code = code[0];
+          this.verifyCodeAndDate(date, diffDays);
       }) 
-   
-      if(this.qr.state == "Inhabilitado") {
-        if(new Date(date) >= new Date(this.qr.modification_date))
-          result = false;
-        else if(this.code.code != this.info.code)
-          result = false;
-        else if(new Date(this.code.creation_date) > new Date(date) || new Date(date) > new Date(this.code.expiration_date))
-          result = false;
-        else if(diffDays > 30)
-          result = false;
-        else
-          result = true;
-      }
-      else if(this.qr.state == "Pendiente") {
-        result = false;
-      }
-      else {
-        result = true;
-      }
+    }
   }
+
+  verifyCodeAndDate(date, diffDays) {
+    
+    let result = false;
+    if(this.qr.state == "Inhabilitado") {
+      if(new Date(date) >= new Date(this.qr.modification_date))
+        result = false;
+      else if(this.code.code != this.info.code)
+        result = false;
+      else if(new Date(this.code.creation_date) > new Date(date) || new Date(date) > new Date(this.code.expiration_date))
+        result = false;
+      else if(diffDays > 30)
+        result = false;
+      else
+        result = true;
+    }
+    else if(this.qr.state == "Pendiente") {
+      result = false;
+    }
+    else {
+      result = true;
+    }
+
     this.writeMessage(result);
   }
 

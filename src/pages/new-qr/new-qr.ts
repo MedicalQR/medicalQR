@@ -35,9 +35,10 @@ export class NewQrPage {
     let month = now.getMonth()+1;
     let yyyy = now.getFullYear();
 
-    if(day < 10) {
+    if(day < 10)
       dd = "0" + day;
-    }
+    else 
+      dd = day.toString();
 
     if(month < 10){
       mm = "0" + month;

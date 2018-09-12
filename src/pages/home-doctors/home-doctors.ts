@@ -29,20 +29,15 @@ export class HomeDoctorsPage {
   obtainQRs(state){
     let all_qrs = [];
     this.qrs = [];
-    console.log("obtainQRS");
-    console.log(this.doctorId);
     this.firebase.getAllQRsByDoctorId(this.doctorId).valueChanges().subscribe(
       qrs => {
-        all_qrs = qrs; 
-        console.log("all_qrs");
-        console.log(all_qrs);
+        all_qrs = qrs;
         if(all_qrs.length > 0)
           this.filterQRs(state, all_qrs);
     })
   }
 
   filterQRs(state, all_qrs){
-    console.log("filter QRS");
     let qrs = [];
 
     for (let i = 0; i < all_qrs.length; i++) { 
@@ -87,9 +82,28 @@ export class HomeDoctorsPage {
   enable(qr){
     let old_state = qr.qr_state_id;
     qr.qr_state_id = "c815819f-a121-453a-8708-f8b0e1a70215";
+
+    let dd = "";
+    let mm = "";
+    let now = new Date();
+    let day = now.getDate();
+    let month = now.getMonth()+1;
+    let yyyy = now.getFullYear();
+
+    if(day < 10) {
+      dd = "0" + day;
+    }
+
+    if(month < 10){
+      mm = "0" + month;
+    } 
+
+    let today = dd +'/'+ mm +'/'+ yyyy;
+
+    qr.modification_date = today;
+
     qr.state = null;
     this.firebase.editQRState(qr);
-    console.log(old_state);
     if(old_state == "57cc0115-360b-4af3-ad5d-da275d6243d3"){ //Pending state//
       let pending = document.getElementById("Pending");
       pending.click();
@@ -103,9 +117,28 @@ export class HomeDoctorsPage {
   disable(qr){
     let old_state = qr.qr_state_id;
     qr.qr_state_id = "7923230e-9c35-4f93-9fb3-5e2634a0f5e1";
+
+    let dd = "";
+    let mm = "";
+    let now = new Date();
+    let day = now.getDate();
+    let month = now.getMonth()+1;
+    let yyyy = now.getFullYear();
+
+    if(day < 10)
+      dd = "0" + day;
+    else 
+      dd = day.toString();
+
+    if(month < 10){
+      mm = "0" + month;
+    } 
+
+    let today = dd +'/'+ mm +'/'+ yyyy;
+
+    qr.modification_date = today;
     qr.state = null;
     this.firebase.editQRState(qr);
-    console.log(old_state);
     if(old_state == "57cc0115-360b-4af3-ad5d-da275d6243d3"){ //Pending state//
       let pending = document.getElementById("Pending");
       pending.click();
