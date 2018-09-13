@@ -35,10 +35,12 @@
       <ion-label for="codigo">Código de Seguridad</ion-label>
         <ion-input type="number" name="codigo" [(ngModel)]="info.code" Maxlength="6"></ion-input>
     </ion-item>
+    <p id="validation_code" style="margin-left: 20px"></p>
     <ion-item>
       <ion-label for="codigo">Fecha de la receta</ion-label>
       <ion-datetime displayFormat="DD/MM/YYYY" [(ngModel)]="info.date"></ion-datetime>
     </ion-item>
+    <p id="validation_date" style="margin-left: 20px"></p>
     <ion-item>
       <button ion-button full (click)="checkPrescription()">Verificar receta médica</button>
     </ion-item>

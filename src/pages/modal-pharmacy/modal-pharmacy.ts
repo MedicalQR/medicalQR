@@ -19,8 +19,6 @@ export class ModalPharmacyPage {
   constructor(public platform: Platform, public params: NavParams, public viewCtrl: ViewController, public firebase: DatabaseServiceProvider) 
   {
     this.id = this.params.get('qr_id');  
-    console.log("id");
-    console.log(this.id);
     var qr = {};
     this.qr = qr;    
     var doctor = {};
@@ -69,44 +67,92 @@ export class ModalPharmacyPage {
   }
 
   checkPrescription() {
-    if(this.info.date != "") {
-      let splitDate = this.info.date.split("-");
-      let yy = splitDate[0];
-      let mm = splitDate[1];
-      let dd = splitDate[2];
-      let date = mm + "/" + dd + "/" + yy;
-      var timeDiff = Math.abs(new Date().getTime() - new Date(date).getTime());
-      var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
-      date = dd + "/" + mm + "/" + yy;
+    let validationCode = document.getElementById("validation_code");
+    let validationDate = document.getElementById("validation_date");
+    if(this.info.code != null) {
+      validationCode.innerHTML = "";
+      if(this.info.date != null) {
+        validationDate.innerHTML = "";
+        let splitDate = this.info.date.split("-");
+        let yy = splitDate[0];
+        let mm = splitDate[1];
+        let dd = splitDate[2];
+        let date = mm + "/" + dd + "/" + yy;
+        var timeDiff = Math.abs(new Date().getTime() - new Date(date).getTime());
+        var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
 
-      this.firebase.getSecurityCodeByCode(this.info.code).valueChanges().subscribe(
-        code => {
-          this.code = code[0];
-          this.verifyCodeAndDate(date, diffDays);
-      }) 
+        this.firebase.getAllSecurityCodes().valueChanges().subscribe(
+          code => {
+            this.code = code[0];
+            console.log(this.code);
+            console.log(this.info.code);
+            this.verifyCodeAndDate(date, diffDays);
+        })
+      }
+      else 
+      validationDate.innerHTML = "Por favor, ingrese la fecha que figura en la receta.";
     }
+    else 
+    validationCode.innerHTML = "Por favor, ingrese el código de seguridad que figura en la receta.";
   }
 
   verifyCodeAndDate(date, diffDays) {
-    
     let result = false;
-    if(this.qr.state == "Inhabilitado") {
-      if(new Date(date) >= new Date(this.qr.modification_date))
-        result = false;
-      else if(this.code.code != this.info.code)
-        result = false;
-      else if(new Date(this.code.creation_date) > new Date(date) || new Date(date) > new Date(this.code.expiration_date))
-        result = false;
-      else if(diffDays > 30)
-        result = false;
-      else
-        result = true;
+    if(this.qr.state == "Habilitado") {
+      console.log("habilitado");
+      if(this.code != null) {
+        if(this.code.code == this.info.code) {
+          console.log("code existe");
+          if(this.code.user_id == this.qr.user_id) {
+            console.log("el codigo es del user");
+            if(new Date(this.code.creation_date) < new Date(date)) {
+              if(new Date(date) < new Date(this.code.expiration_date)) {
+                console.log("dentro de la creacion y expiracion del codigo");
+                if(diffDays < 30) {
+                  console.log("menor a 30 dias");
+                  result = true;
+                }
+                else 
+                console.log("mayor a 30 dias");
+              }
+              else {
+                console.log("fuera de expiracion");
+              }
+            }
+            else {
+              console.log("fuera de la creacion");
+            }
+          }
+          else 
+          console.log("codigo no es de user");
+        }
+        else 
+        console.log("codigo no existe");
+      }
     }
-    else if(this.qr.state == "Pendiente") {
-      result = false;
+    else if(this.qr.state == "Inhabilitado") {
+      console.log("inhabilitado");
+      if(new Date(date) < new Date(this.qr.modification_date)) {
+        console.log("date anterior a la ultima mod");
+        if(this.code != null) {
+          if(this.code.code == this.info.code) {
+            console.log("code existe");
+            if(this.code.user_id == this.qr.user_id) {
+              console.log("el codigo es del user");
+              if(new Date(this.code.creation_date) < new Date(date) || new Date(date) < new Date(this.code.expiration_date)) {
+                console.log("dentro de la creacion y expiracion del codigo");
+                if(diffDays < 30) {
+                  console.log("menor a 30 dias");
+                  result = true;
+                }
+              }
+            }
+          }
+        }
+      }
     }
     else {
-      result = true;
+      result = false;
     }
 
     this.writeMessage(result);

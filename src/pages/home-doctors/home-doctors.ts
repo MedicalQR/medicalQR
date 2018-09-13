@@ -14,6 +14,7 @@ export class HomeDoctorsPage {
 
   doctorId : any;
   qrs: any = [];
+  code: any = {};
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public firebase: DatabaseServiceProvider, public modalCtrl: ModalController,  public globalDataCtrl: GlobalDataProvider, public menuCtrl: MenuController) 
   {
@@ -22,11 +23,23 @@ export class HomeDoctorsPage {
 
   ionViewDidLoad(){
     this.doctorId = this.globalDataCtrl.getUser_id();
-    this.obtainQRs("Pending");
+    //this.obtainQRs("Pending");
+    this.securityCode();
     this.menuCtrl.enable(true, "myMenu");
   }
 
+  securityCode() {
+    document.getElementById("qrs").style.visibility = "hidden";
+    document.getElementById("securityCodeContent").style.visibility = "visible";
+    this.firebase.getAllUserCodesByUserId(this.doctorId).valueChanges().subscribe(
+      code => {
+        this.code = code[0];
+    })
+  }
+
   obtainQRs(state){
+    document.getElementById("qrs").style.visibility = "visible";
+    document.getElementById("securityCodeContent").style.visibility = "hidden";
     let all_qrs = [];
     this.qrs = [];
     this.firebase.getAllQRsByDoctorId(this.doctorId).valueChanges().subscribe(

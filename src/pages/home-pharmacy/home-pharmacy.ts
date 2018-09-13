@@ -30,7 +30,7 @@ export class HomePharmacyPage {
   scanCode() {
     this.barcodeScanner.scan().then(barcodeData => {
       this.scannedCode = barcodeData.text;
-      //this.scannedCode = "41ae233e-80f2-7467-58ec-540f8b2f7b50";
+      //this.scannedCode = "c3f600c7-6b53-d438-ddba-cf84bcd2ae73";
       this.firebase.getQRById(this.scannedCode).valueChanges().subscribe(
         qr => {
           this.qr = qr[0]; 

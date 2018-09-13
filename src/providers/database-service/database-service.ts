@@ -72,7 +72,17 @@ constructor(public firebase: AngularFireDatabase) {}
 
   getSecurityCodeByCode(code) {
     return this.firebase.list('security_codes/',
-    ref => ref.orderByChild('code').equalTo(code));
+      ref => ref.orderByChild('code').equalTo(code));
+  }
+
+  getAllUserCodesByUserId(userId) {
+    return this.firebase.list('security_codes/',
+      ref => ref.orderByChild('user_id').equalTo(userId));
+  }
+
+  
+  getAllSecurityCodes() {
+    return this.firebase.list('security_codes/');
   }
 
   createUser(user){

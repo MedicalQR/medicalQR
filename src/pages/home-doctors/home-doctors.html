@@ -5,6 +5,9 @@
 
   <ion-toolbar>
       <ion-segment [(ngModel)]="icons" color="primary">
+        <ion-segment-button id="SecurityCode" value="securityCode" (click)="securityCode()">
+          Código de Seguridad
+        </ion-segment-button>
         <ion-segment-button id="Pending" value="pending" (click)="obtainQRs('Pending')">
           Pendientes
         </ion-segment-button>
@@ -19,10 +22,10 @@
 
 </ion-header>
 
-<ion-content padding>
-    <ion-fab top right edge>
-        <button ion-fab mini item-end (click)="createQR()">+</button>
-      </ion-fab>
+<ion-content id="qrs" padding>
+  <ion-fab bottom right edge>
+    <button ion-fab mini item-end (click)="createQR()">+</button>
+  </ion-fab>
   <ion-list>
     <ion-item-sliding #item *ngFor="let qr of qrs">
       <ion-item>
@@ -39,3 +42,10 @@
     </ion-item-sliding>
   </ion-list>      
 </ion-content>
+<ion-content id="securityCodeContent" padding>
+    <ion-list>
+        <ion-item>
+          Código de Seguridad: {{this.code.code}}
+        </ion-item>   
+    </ion-list>      
+  </ion-content>

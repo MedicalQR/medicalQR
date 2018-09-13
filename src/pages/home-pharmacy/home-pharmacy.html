@@ -8,13 +8,6 @@
   <h6 text-center>
     Escanear código QR
   </h6>
-
-  <ion-card *ngIf="scannedCode">
-    <ion-card-content>
-      Result from Scan: {{ scannedCode }}
-    </ion-card-content>
-  </ion-card>
-
   <button ion-button full icon-left (click)="scanCode()" color="secondary"><ion-icon name="qr-scanner"></ion-icon>Escanear</button>
 </ion-content>
 
