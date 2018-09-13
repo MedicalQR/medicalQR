@@ -22,12 +22,12 @@
 
 </ion-header>
 
-<ion-content id="qrs" padding>
+<ion-content padding>
   <ion-fab bottom right edge>
     <button ion-fab mini item-end (click)="createQR()">+</button>
   </ion-fab>
-  <ion-list>
-    <ion-item-sliding #item *ngFor="let qr of qrs">
+  <ion-list *ngIf="!security_code">
+    <ion-item-sliding  #item *ngFor="let qr of qrs">
       <ion-item>
         <ion-thumbnail item-start>
           <img src="{{qr.image}}">
@@ -40,12 +40,10 @@
         <button *ngIf="qr.qr_state_id!=='7923230e-9c35-4f93-9fb3-5e2634a0f5e1'" ion-button color="danger" (click)="disable(qr)">Inhabilitar</button>
       </ion-item-options>
     </ion-item-sliding>
-  </ion-list>      
+  </ion-list>   
+  <ion-list *ngIf="security_code">
+    <ion-item>
+      Código de Seguridad: {{this.code.code}}
+    </ion-item>   
+  </ion-list>   
 </ion-content>
-<ion-content id="securityCodeContent" padding>
-    <ion-list>
-        <ion-item>
-          Código de Seguridad: {{this.code.code}}
-        </ion-item>   
-    </ion-list>      
-  </ion-content>
