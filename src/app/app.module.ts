@@ -38,12 +38,12 @@ import { GlobalDataProvider } from '../providers/global-data/global-data';
 
 
 var config = {
-  apiKey: "AIzaSyDUBtCAdjZem5IbH9PqMhudLVAXxJNq51o",
-  authDomain: "medicalqr-42850.firebaseapp.com",
-  databaseURL: "https://medicalqr-42850.firebaseio.com",
-  projectId: "medicalqr-42850",
-  storageBucket: "medicalqr-42850.appspot.com",
-  messagingSenderId: "988656361007"
+  apiKey: "",
+  authDomain: "",
+  databaseURL: "",
+  projectId: "",
+  storageBucket: "",
+  messagingSenderId: ""
 };
 
 @NgModule({
