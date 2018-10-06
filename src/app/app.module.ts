@@ -33,10 +33,7 @@ import { ModalPharmacyPage } from '../pages/modal-pharmacy/modal-pharmacy';
 import { UserProfilePage } from '../pages/user-profile/user-profile';
 import { GlobalDataProvider } from '../providers/global-data/global-data';
 
-
-
-
-
+//Obtener los datos de la base de firebase, nunca hacer commit con esa info
 var config = {
   apiKey: "",
   authDomain: "",
