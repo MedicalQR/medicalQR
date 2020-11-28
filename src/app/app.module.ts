@@ -10,6 +10,7 @@ import { LoginPage } from '../pages/login/login';
 import { HomeDoctorsPage } from '../pages/home-doctors/home-doctors';
 import { HomePharmacyPage } from '../pages/home-pharmacy/home-pharmacy';
 import { HomeMinistryPage } from '../pages/home-ministry/home-ministry';
+import { HomeGuestPage } from '../pages/home-guest/home-guest';
 import { NewQrPage } from '../pages/new-qr/new-qr';
 import { ModalDoctorPage } from '../pages/modal-doctor/modal-doctor';
 import { RegisterPage } from '../pages/register/register';
@@ -22,6 +23,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
+import { AngularFireAuthModule } from '@angular/fire/auth';
 import { DatabaseServiceProvider } from '../providers/database-service/database-service';
 import { BrMaskerModule } from 'brmasker-ionic-3';
 
@@ -35,12 +37,13 @@ import { GlobalDataProvider } from '../providers/global-data/global-data';
 
 //Obtener los datos de la base de firebase, nunca hacer commit con esa info
 var config = {
-  apiKey: "",
-  authDomain: "",
-  databaseURL: "",
-  projectId: "",
-  storageBucket: "",
-  messagingSenderId: ""
+  apiKey: "AIzaSyDUBtCAdjZem5IbH9PqMhudLVAXxJNq51o",
+  authDomain: "medicalqr-42850.firebaseapp.com",
+  databaseURL: "https://medicalqr-42850.firebaseio.com",
+  projectId: "medicalqr-42850",
+  storageBucket: "medicalqr-42850.appspot.com",
+  messagingSenderId: "988656361007",
+  appId: "1:988656361007:web:a01d5d5a676c1fb5c570da"
 };
 
 @NgModule({
@@ -53,6 +56,7 @@ var config = {
     HomeDoctorsPage,
     HomePharmacyPage,
     HomeMinistryPage,
+    HomeGuestPage,
     ModalDoctorPage,
     RegisterPage,
     NewQrPage,
@@ -66,6 +70,7 @@ var config = {
     BrowserModule,
     IonicModule.forRoot(MyApp),
     AngularFireModule.initializeApp(config,'medicalqr'),
+    AngularFireAuthModule,
     AngularFireDatabaseModule,
     AngularFirestoreModule,
     BrMaskerModule,
@@ -81,6 +86,7 @@ var config = {
     HomeDoctorsPage,
     HomePharmacyPage,
     HomeMinistryPage,
+    HomeGuestPage,
     ModalDoctorPage,
     RegisterPage,
     NewQrPage,

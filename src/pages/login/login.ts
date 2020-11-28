@@ -4,6 +4,7 @@ import { DatabaseServiceProvider } from '../../providers/database-service/databa
 import { HomeDoctorsPage } from '../home-doctors/home-doctors';
 import { HomePharmacyPage } from '../home-pharmacy/home-pharmacy';
 import { HomeMinistryPage } from '../home-ministry/home-ministry';
+import { HomeGuestPage } from '../home-guest/home-guest';
 import { RegisterPage } from '../register/register';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { BrMaskerModule } from 'brmasker-ionic-3';
@@ -11,6 +12,8 @@ import { AlertController } from 'ionic-angular';
 import {Md5} from 'ts-md5/dist/md5';
 import {ChangePasswordPage} from '../change-password/change-password';
 import { GlobalDataProvider } from '../../providers/global-data/global-data';
+import { AngularFireAuth } from '@angular/fire/auth';
+import * as firebase from 'firebase/app';
 
 
 @IonicPage()
@@ -28,7 +31,11 @@ export class LoginPage {
   errorMessage : any;
   private todo : FormGroup;
 
-  constructor(public menuCtrl: MenuController, public alertCtrl: AlertController, public navCtrl: NavController, public navParams: NavParams, public firebase: DatabaseServiceProvider, private formBuilder: FormBuilder,  public globalDataCtrl: GlobalDataProvider) {
+  picture;
+  name;
+  email;
+
+  constructor(public menuCtrl: MenuController, public alertCtrl: AlertController, public navCtrl: NavController, public navParams: NavParams, public firebase: DatabaseServiceProvider, private formBuilder: FormBuilder,  public globalDataCtrl: GlobalDataProvider, private afAuth: AngularFireAuth) {
     this.loggedUser = this.formBuilder.group({
       document: ['', Validators.required],
       password: ['', Validators.required],
@@ -61,7 +68,31 @@ export class LoginPage {
       }
     )
   }
-    
+
+  async loginGoogle() {
+    const res = await this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+    const user = res.user;
+    console.log(user);
+    this.picture = user.photoURL;
+    this.name = user.displayName;
+    this.email = user.email;
+    this.globalDataCtrl.setHomePage(HomeGuestPage);
+    this.navCtrl.push(HomeGuestPage);
+ }
+  
+ async loginFacebook() {
+  var provider = new firebase.auth.FacebookAuthProvider();
+  this.afAuth.auth.signInWithPopup(provider)
+  .then((result) => {
+    console.log(result);
+    this.globalDataCtrl.setHomePage(HomeGuestPage);
+    this.navCtrl.push(HomeGuestPage);
+  })
+  .catch(err => {
+    console.log(err.message);
+  })
+  
+  }
 
   logForm(){
     this.correctUser = {};
