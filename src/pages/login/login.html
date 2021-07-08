@@ -8,51 +8,14 @@
       <img class="login-logo" src="./assets/imgs/qrlogo.jpg" alt="Logo">
     </figure>
 
-    <form [formGroup]="loggedUser" (ngSubmit)="logForm()" class="login-form">
-      <ion-item>
-        <ion-label color="dark-yellow">
-          Tipo de usuario
-        </ion-label>
-          <ion-select formControlName="role">
-            <ion-option *ngFor="let role of allRoles" value="{{role.name}}">{{role.name}}</ion-option>
-        </ion-select>
-      </ion-item>
-      <ion-item>
-        <ion-label color="dark-yellow">
-          CUIT/CUIL 
-        </ion-label>
-        <ion-input type="text" [brmasker]="{mask:'00-00000000-0', len:13, type:'num'}" formControlName="document"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label color="dark-yellow">
-          Password
-        </ion-label>
-        <ion-input type="password" name = "password" formControlName="password"></ion-input>
-      </ion-item>
-      <button ion-button full color="darken-blue" type="submit" [disabled]="!loggedUser.valid">Login</button>
-    </form>
-
-    <p ion-text color="light" >Did you forget your password?
-        <a (click)="recoveryPassword()" ion-text color="secondary">
-          <br>Recover password
-        </a>
-    </p>
-    
     <hr class="divider">
-    <button ion-button clear color="light" (click)="register()">
-      Create an account
+    <button ion-button color="danger" (click)="loginGoogle()">
+      <ion-icon name="logo-google">&nbsp;</ion-icon>
+      Login with Google
     </button>
-
-    <hr class="divider">
-    <button ion-button clear color="light" (click)="loginGoogle()">
-      Google login
-    </button>
-
-    <hr class="divider">
-    <button ion-button clear color="light" (click)="loginFacebook()">
-      Facebook login
-    </button>
-    
+    <button ion-button color="primary" (click)="loginFacebook()">
+      <ion-icon name="logo-facebook">&nbsp;</ion-icon>
+      Login with Facebook
+    </button>    
   </div>
 </ion-content>
-  

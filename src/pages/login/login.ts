@@ -24,7 +24,6 @@ import { HttpClient } from '@angular/common/http';
 export class LoginPage {
 
   user : any = {};
-  correctUser : any = {};
   existingUser : any = {};
 
   doctors: any[];
@@ -51,25 +50,7 @@ export class LoginPage {
   }
 
   ionViewWillEnter(){
-    //this.obtainAllUsers();
     this.obtainAllRoles();
-  }
-
-  obtainAllUsers(){
-    var apiURL = this.globalDataCtrl.getApiURL();
-    return new Promise(resolve => {
-      this.http.get(apiURL+'api/Doctors').subscribe(data => {
-        resolve(data);
-        console.log(data);
-      }, err => {
-        console.log(err);
-      });
-    });
-    /*this.firebase.getAllUsers().valueChanges().subscribe(
-      allUsers => {
-        this.allUsers = allUsers;
-      }
-    )*/
   }
 
   obtainAllRoles(){
@@ -91,13 +72,18 @@ export class LoginPage {
     const res = await this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
     const user = res.user;
     this.uid = user.uid; 
+    this.globalDataCtrl.setGmailId(this.uid);
 
     this.getDoctors().then((result) => {
       if(this.doctors.length > 0){
         this.doctors.forEach(doctor => {
-          if(doctor.GoogleId == this.uid){
+          if(doctor.GmailID == this.uid){
             this.existingUser = doctor;
             this.existingUser.role = 'Doctor';
+            this.globalDataCtrl.setHomePage(HomeDoctorsPage);
+            this.navCtrl.push(HomeDoctorsPage, {
+              id: this.existingUser.id
+            });
           }
         });
         console.log("finished doctors");
@@ -106,9 +92,11 @@ export class LoginPage {
         this.getPharmacies().then((result) => {
           if(this.pharmacies.length > 0){
             this.pharmacies.forEach(pharmacy => {
-              if(pharmacy.GoogleId == this.uid){
+              if(pharmacy.GmailID == this.uid){
                 this.existingUser = pharmacy;
                 this.existingUser.role = 'Pharmacy';
+                this.globalDataCtrl.setHomePage(HomePharmacyPage);
+                this.navCtrl.push(HomePharmacyPage);
               }
             });
           }
@@ -117,11 +105,13 @@ export class LoginPage {
       }
       if(this.existingUser == null) {
         this.getAdmins().then((result) => {
-          if(this.pharmacies.length > 0){
-            this.pharmacies.forEach(pharmacy => {
-              if(pharmacy.GoogleId == this.uid){
-                this.existingUser = pharmacy;
-                this.existingUser.role = 'Pharmacy';
+          if(this.admins.length > 0){
+            this.admins.forEach(admin => {
+              if(admin.GmailID == this.uid){
+                this.existingUser = admin;
+                this.existingUser.role = 'Administrator';
+                this.globalDataCtrl.setHomePage(HomeMinistryPage);
+                this.navCtrl.push(HomeMinistryPage);
               }
             });
           }
@@ -132,11 +122,6 @@ export class LoginPage {
         this.navCtrl.push(RegisterPage);
       }
     });
-
-    //Si es la primera vez que inician sesión utilizando Facebook debería ser redirigido a la página de Registro/Brindarle tambien la posiblidad de loguearse, por si su cuenta ya existe. 
-    //Si NO es la primera vez, debería validarse el ID de Facebook con el usuario que esté creado y redirigir a esa página.
-    //this.globalDataCtrl.setHomePage(HomeGuestPage);
-    //this.navCtrl.push(HomeGuestPage);
  }
   
   async loginFacebook() {
@@ -152,86 +137,6 @@ export class LoginPage {
     .catch(err => { 
         console.log(err.message);
     })
-  }
-
-  logForm(){
-    this.correctUser = {};
-    this.errorMessage = null;
-
-    this.loggedUser.value.document = this.loggedUser.value.document.replace('-', '');
-    this.loggedUser.value.document = this.loggedUser.value.document.replace('-', '');
-    this.loggedUser.value.document = this.loggedUser.value.document.toString();
-    let document = this.loggedUser.value.document;
-    let role = this.loggedUser.value.role;
-
-    //this.validateUser(role, document);
-
-    if(this.errorMessage != "Los datos ingresados no son correctos"){
-      let hashPass = Md5.hashStr(this.loggedUser.value.password);
-      if(hashPass == this.correctUser.password){
-        if(this.correctUser.Status == "Active"){//Usuario habilitado
-          this.globalDataCtrl.setUser_id(this.correctUser.id);
-          if (this.correctUser.role_id == "37a938a1-e7f0-42c2-adeb-b8a9a36b6cb8"){ //Doctores
-            this.globalDataCtrl.setHomePage(HomeDoctorsPage);
-            this.navCtrl.push(HomeDoctorsPage, {
-              id: this.correctUser.id
-            });
-          } else if (this.correctUser.role_id == "35d0b156-e7be-4af1-a84d-3e9e30a2bd06"){ //Ministerio
-            this.globalDataCtrl.setHomePage(HomeMinistryPage);
-            this.navCtrl.push(HomeMinistryPage);
-          } else {
-            this.globalDataCtrl.setHomePage(HomePharmacyPage);
-            this.navCtrl.push(HomePharmacyPage);
-          }
-        } else {  
-          this.errorMessage = null;
-          this.errorMessage = {
-            tittle: "¡Error!",
-            subtittle: "Los datos ingresados no son correctos"
-          }
-        }
-      } else {
-        this.errorMessage = null;
-        this.errorMessage =  {
-          tittle: "¡Error!",
-          subtittle: "El usuario que has ingresado no se encuentra habilitado; por favor contáctate con nuestra área de Atención al cliente"
-        }
-      }
-    } else{
-      this.errorMessage = null;
-      this.errorMessage =  {
-        tittle: "¡Error!",
-        subtittle: "Los datos ingresados no son correctos"
-      }
-    } 
-
-    if(this.errorMessage != null){
-      this.showPrompt(this.errorMessage)
-    }
-
-    /*var apiURL = this.globalDataCtrl.getApiURL();
-    return new Promise(resolve => {
-      this.http.get(apiURL+urlRole).subscribe(data => {
-        resolve(data);
-        this.allUsers = data; 
-        for (let i = 0; i < this.allUsers.length; i++) {
-          if(this.allUsers[i].document == this.loggedUser.value.document){
-            this.errorMessage = null;
-            this.correctUser = this.allUsers[i];
-            this.correctUser.role = role; 
-            break;
-          }else{
-            this.errorMessage = {
-              tittle: "¡Error!",
-              subtittle: "Los datos ingresados no son correctos"
-            }
-          }
-        } 
-        console.log(data);
-      }, err => {
-        console.log(err);
-      });
-    });*/
   }
 
   showPrompt(message) {
@@ -278,35 +183,5 @@ export class LoginPage {
         console.log(err);
       });
     });
-  }
-
-  recoveryPassword() {
-    /*let message = null;
-    if(this.loggedUser.value.document == null || this.loggedUser.value.document.length <= 0){
-      message =  {
-        tittle: "¡Error!",
-        subtittle: "Indica un CUIT/CUIL por favor"
-      }
-    } else {
-      this.loggedUser.value.document = this.loggedUser.value.document.replace('-', '');
-      this.loggedUser.value.document = this.loggedUser.value.document.replace('-', '');
-      this.loggedUser.value.document = this.loggedUser.value.document.toString();
-      for (let i = 0; i < this.allUsers.length; i++) {
-        if(this.allUsers[i].document == this.loggedUser.value.document){
-          message =  {
-            tittle: "¡Alerta!",
-            subtittle: "Se ha enviado un correo electrónico con tu nueva contraseña al e-mail que indicaste en tu formulario de registro"
-          }
-          break;
-        }
-      }
-      if (message == null){
-        message =  {
-          tittle: "¡Error!",
-          subtittle: "Indica un CUIT/CUIL válido"
-        }
-      }
-    }
-    this.showPrompt(message)*/
   }
 } 

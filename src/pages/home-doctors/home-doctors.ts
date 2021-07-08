@@ -25,7 +25,7 @@ export class HomeDoctorsPage {
   ionViewDidLoad(){
     this.doctorId = this.globalDataCtrl.getUser_id();
     //this.obtainQRs("Pending");
-    this.securityCode();
+    //this.securityCode();
     this.menuCtrl.enable(true, "myMenu");
   }
 
