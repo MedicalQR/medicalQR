@@ -21,67 +21,57 @@
             Tipo de usuario
           </ion-label>
             <ion-select formControlName="role_id" (ionChange)="setValidatorsForMedicalLicense()">
-              <ion-option *ngFor="let role of allRoles" value="{{role.roles_id}}">{{role.name}}</ion-option>
+              <ion-option *ngFor="let role of allRoles" value="{{role.name}}">{{role.name}}</ion-option>
           </ion-select>
         </ion-item>
-
         <ion-item>
           <ion-label color="dark-yellow">
             e-mail 
           </ion-label>
-          <ion-input type="email" formControlName="email"></ion-input>
+          <ion-input type="email" formControlName="email" name="email"></ion-input>
         </ion-item>       
-        
         <ion-item *ngIf="newUser.controls.email.dirty && newUser.controls.email.hasError('email')">
           <p>e-mail inválido</p>
         </ion-item>
-        
-        <ion-item>
+        <ion-item *ngIf="newUser.value.role_id=='Profesionales de la Salud' || newUser.value.role_id=='Administrador'">
           <ion-label color="dark-yellow">
             Nombre 
           </ion-label>
-          <ion-input type="text" formControlName="name"></ion-input>
+          <ion-input type="text" formControlName="name" name="name"></ion-input>
         </ion-item>
-
-        <ion-item>
+        <ion-item *ngIf="newUser.value.role_id=='Profesionales de la Salud' || newUser.value.role_id=='Administrador'">
+          <ion-label color="dark-yellow">
+            Apellido 
+          </ion-label>
+          <ion-input type="text" formControlName="lastname" name="lastname"></ion-input>
+        </ion-item>
+        <ion-item *ngIf="newUser.value.role_id=='Profesionales de la Salud'">
+          <ion-label color="dark-yellow">
+            Licencia médica
+          </ion-label>
+          <ion-input type="text" formControlName="license" name="license"></ion-input>
+        </ion-item>
+        <ion-item *ngIf="newUser.value.role_id=='Farmacia'">
+          <ion-label color="dark-yellow">
+            Nombre de la farmacia 
+          </ion-label>
+          <ion-input type="text" formControlName="companyname" name="companyname"></ion-input>
+        </ion-item>
+        <ion-item *ngIf="newUser.value.role_id=='Farmacia'">
+          <ion-label color="dark-yellow">
+            Razon social 
+          </ion-label>
+          <ion-input type="text" formControlName="buisinessname" name="buisinessname"></ion-input>
+        </ion-item>
+        <ion-item *ngIf="newUser.value.role_id=='Farmacia'">
           <ion-label color="dark-yellow">
             CUIT/CUIL 
           </ion-label>
-          <ion-input type="text" [brmasker]="{mask:'00-00000000-0', len:13, type:'num'}" formControlName="document"></ion-input>
+          <ion-input type="text" [brmasker]="{mask:'00-00000000-0', len:13, type:'num'}" formControlName="document" name="document"></ion-input>
         </ion-item>
 
         <ion-item *ngIf="newUser.controls.document.hasError('minlength')">
           <p>CUIT/CUIL incorrecto</p>
-        </ion-item>
-
-        <ion-item>
-          <ion-label color="dark-yellow">
-            Password
-          </ion-label>
-          <ion-input type="password" name = "password" formControlName="password" (change)="checkEmptyPassword()"></ion-input>
-        </ion-item>
-
-        <ion-item *ngIf="passwordErrorMessage">
-          <p>La contraseña debe tener al menos 8 caracteres</p>
-        </ion-item>
-
-        <ion-item>
-          <ion-label color="dark-yellow">
-            Confirmar Password
-          </ion-label>
-          <ion-input type="password" name = "cPassword" formControlName="cPassword" (change)="checkEmptyPassword()"></ion-input>
-        </ion-item>
-        
-        <ion-item *ngIf="cPasswordErrorMessage">
-          <p>La contraseña debe tener al menos 8 caracteres</p>
-        </ion-item>
-        
-
-        <ion-item *ngIf="newUser.value.role_id =='37a938a1-e7f0-42c2-adeb-b8a9a36b6cb8'">
-          <ion-label color="dark-yellow">
-            Licencia médica
-          </ion-label>
-          <ion-input type="license" name = "license" formControlName="license"></ion-input>
         </ion-item>
 
         <button ion-button full color="darken-blue" type="submit" [disabled]="!newUser.valid">Registrarse</button>

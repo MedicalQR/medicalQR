@@ -7,7 +7,8 @@ import { BrMaskerModule } from 'brmasker-ionic-3';
 import {Md5} from 'ts-md5/dist/md5';
 import { Guid } from "guid-typescript";
 import { AlertController } from 'ionic-angular';
-
+import { GlobalDataProvider } from '../../providers/global-data/global-data';
+import { HttpClient } from '@angular/common/http';
 
 /**
  * Generated class for the RegisterPage page.
@@ -24,56 +25,51 @@ import { AlertController } from 'ionic-angular';
 export class RegisterPage {
 
   newUser : any = {};
-  allUsers : any = {};
+  allPharmacies : any[];
+  allDoctors : any[];
+  allAdmins : any[];
   allRoles : any = [];
   allStates : any = [];
   errorMessage : any;
   passwordErrorMessage : any;
   cPasswordErrorMessage : any;
 
-  constructor(public alertCtrl: AlertController, public navCtrl: NavController, public navParams: NavParams, public firebase: DatabaseServiceProvider, private formBuilder: FormBuilder) {
+  constructor(public alertCtrl: AlertController, public navCtrl: NavController, public navParams: NavParams, public firebase: DatabaseServiceProvider, private formBuilder: FormBuilder, public globalDataCtrl: GlobalDataProvider, public http: HttpClient) {
     
     this.newUser = this.formBuilder.group({
-      document: ['', Validators.compose([Validators.required, Validators.minLength(13)])],
+      document: [''],
       license: [''],
-      name : ['', Validators.required],
+      name : [''],
+      lastname : [''],
+      companyname : [''],
+      businessname : [''],
       email : ['', Validators.compose([Validators.required, Validators.email])],
-      password : ['', Validators.compose([Validators.required, Validators.minLength(8)])],
-      cPassword: ['', Validators.compose([Validators.required, Validators.minLength(8)])],
       role_id: ['', Validators.required],
     })
-    this.allUsers = {};
+
     this.obtainAllRoles();
-    this.obtainAllUsers();   
- 
   }
 
   ionViewDidLoad() {
     this.obtainAllRoles();
-    this.obtainAllUsers();
   }
 
   ionViewWillEnter(){
     this.obtainAllRoles();
-    this.obtainAllUsers();
-  }
-
-
-  obtainAllUsers(){
-    this.firebase.getAllUsers().valueChanges().subscribe(
-      allUsers => {
-        this.allUsers = allUsers;
-      }
-    )
   }
 
   obtainAllRoles(){
-    this.firebase.getRoles().valueChanges().subscribe(
-      roles => {
-        roles.splice(0, 1); 
-        this.allRoles = roles;
+    this.allRoles = [
+      {
+        "name": "Profesionales de la Salud",
+      },
+      {
+        "name": "Administrador",
+      },
+      {
+        "name": "Farmacia",
       }
-    )
+    ];
   }
 
   obtainAllUsersStates(){
@@ -88,93 +84,143 @@ export class RegisterPage {
     this.errorMessage = null;
     this.newUser.value.document = this.newUser.value.document.replace('-', '');
     this.newUser.value.document = this.newUser.value.document.replace('-', '');
-    this.findDuplicateDocument(this.newUser.value.document);
-    this.newUser.value.password = Md5.hashStr(this.newUser.value.password);
-    this.newUser.value.cPassword = Md5.hashStr(this.newUser.value.cPassword);
-    if(this.errorMessage == null){
-      this.comparePasswords(this.newUser.value.password, this.newUser.value.cPassword)
-    }
+
     if(this.errorMessage != null){
-      console.log(this.errorMessage)
-    }else{
-      this.obtainCorrectState();
+      console.log(this.errorMessage);
+    }else if(this.newUser.value.role_id == "Profesionales de la Salud"){
+      this.getDoctors().then((result) => {
+        if(this.allDoctors.length > 0){
+          this.allDoctors.forEach(doctor => {
+            if(doctor.medicalLicense == this.newUser.value.license){
+              this.errorMessage = "Ya se encuentra registrado un Profesional de la Salud con esa licencia médica.";
+            }
+          });
+        }
+
+        if(this.errorMessage == null) {
+          let createdUser = {
+            medicalLicense : this.newUser.value.license,
+            name : this.newUser.value.name,
+            lastname: this.newUser.value.lastname,
+            email : this.newUser.value.email,
+            id : Guid.create().toString(),
+            Status : 'Inactivo',
+            GmailID: this.globalDataCtrl.getGmailId(),
+            FacebookID: ''
+          }
+  
+          var apiURL = this.globalDataCtrl.getApiURL();
+          return new Promise(resolve => {
+            this.http.post(apiURL+'Doctors', createdUser).subscribe(data => {
+              resolve(data);
+              this.goToHome("Profesionales de la Salud");
+            }, err => {
+              console.log(err);
+            });
+          });
+        }
+      });
+    }
+    else if(this.newUser.value.role_id == "Farmacia") {
+      this.getPharmacies().then((result) => {
+        if(this.allPharmacies.length > 0){
+          this.allPharmacies.forEach(pharmacy => {
+            if(pharmacy.cuit == this.newUser.value.document){
+              this.errorMessage = "Una Farmacia con ese CUIT ya se encuentra registrado.";
+            }
+          });
+        }
+
+        if(this.errorMessage == null) {
+          let createdUser = {
+            cuit : this.newUser.value.document,
+            company_name : this.newUser.value.companyname,
+            buisiness_name : this.newUser.value.buisinessname,
+            role_id : this.newUser.value.role_id,
+            id : Guid.create().toString(),
+            Status : 'Inactivo'
+          }
+  
+          var apiURL = this.globalDataCtrl.getApiURL();
+          return new Promise(resolve => {
+            this.http.post(apiURL+'Pharmacies', createdUser).subscribe(data => {
+              resolve(data);
+              this.goToHome("Farmacia");
+            }, err => {
+              console.log(err);
+            });
+          });
+        }
+      });
+    }
+    else {
       let createdUser = {
-        document : this.newUser.value.document,
-        license : this.newUser.value.license,
         name : this.newUser.value.name,
+        lastname: this.newUser.value.lastname,
         email : this.newUser.value.email,
-        password : this.newUser.value.cPassword,
         role_id : this.newUser.value.role_id,
-        user_id : Guid.create().toString(),
-        user_state_id : this.newUser.value.user_state_id
+        id : Guid.create().toString(),
       }
-      this.firebase.createUser(createdUser);
-      this.goToHome(createdUser.role_id);
-    }
-  }
-
-  findDuplicateDocument(document){
-    this.errorMessage = null;
-    for (let i = 0; i < this.allUsers.length; i++) {
-      if(this.allUsers[i].document == document){
-        this.errorMessage = "El usuario ya se encuentra registrado";
-        break;
-      }
-    } 
-  }
-
-  comparePasswords(password, confirmPassword){
-    this.errorMessage = null;
-    if(password != confirmPassword){
-      this.errorMessage = "Las contraseñas ingresadas no coinciden";
-    }
-  }
-
-  obtainCorrectState(){
-    if(this.newUser.value.role_id == "37a938a1-e7f0-42c2-adeb-b8a9a36b6cb8"){ //Profesionales de la salud
-      this.newUser.value.user_state_id = "bfff8fef-7b54-42c1-bf7f-83232a08cf5c" //Pendiente
-    } else {
-      this.newUser.value.user_state_id = "2103d550-17c2-4ff5-9b61-73e7f4ea6a7f" //Habilitado
-    }
-  }
-
-  checkEmptyPassword(){
-    this.passwordErrorMessage = false
-    this.cPasswordErrorMessage = false
-    let valuePassword = this.newUser.value.password
-    let valuecPassword = this.newUser.value.cPassword
-
-    if(valuePassword.length < 8){
-      this.passwordErrorMessage = true
-    }else {
-      this.passwordErrorMessage = false
-    }
-
-    if(valuecPassword.length < 8){
-      this.cPasswordErrorMessage = true
-    }else {
-      this.cPasswordErrorMessage = false
     }
   }
 
   setValidatorsForMedicalLicense(){
-    if(this.newUser.value.role_id == "37a938a1-e7f0-42c2-adeb-b8a9a36b6cb8"){
+    if(this.newUser.value.role_id == "Profesionales de la Salud"){
+      //Habilitar
       this.newUser.controls["license"].setValidators([Validators.required])
       this.newUser.get("license").updateValueAndValidity();
-    }else if (this.newUser.value.role_id == "bd94bc0d-53d6-47e0-8bf6-95fc63b28a93"){
-      this.newUser.value.license = "";
-      this.newUser.get("license").clearValidators();
-      this.newUser.get("license").updateValueAndValidity();
+      this.newUser.controls["name"].setValidators([Validators.required])
+      this.newUser.get("name").updateValueAndValidity();
+      this.newUser.controls["lastname"].setValidators([Validators.required])
+      this.newUser.get("lastname").updateValueAndValidity();
+    }else if (this.newUser.value.role_id == "Farmacia"){
+      //Habilitar
+      this.newUser.controls["document"].setValidators([Validators.required])
+      this.newUser.get("document").updateValueAndValidity();
+      this.newUser.controls["companyname"].setValidators([Validators.required])
+      this.newUser.get("companyname").updateValueAndValidity();
+      this.newUser.controls["buisinessname"].setValidators([Validators.required])
+      this.newUser.get("buisinessname").updateValueAndValidity();
+    }
+    else {
+      //Habilitar
+      this.newUser.controls["name"].setValidators([Validators.required])
+      this.newUser.get("name").updateValueAndValidity();
+      this.newUser.controls["lastname"].setValidators([Validators.required])
+      this.newUser.get("lastname").updateValueAndValidity();
     }
   }
+
   goToHome(role_id){
-    if (role_id == "37a938a1-e7f0-42c2-adeb-b8a9a36b6cb8"){ //Doctores
+    if (role_id == "Profesionales de la Salud"){ //Doctores
       let message = "El Ministerio de salud deberá habilitar tu registro en no menos de 48 horas, te avisaremos una vez el Ministerio habilite tu registro";
       this.showPrompt(message);
-    }else if (role_id == "bd94bc0d-53d6-47e0-8bf6-95fc63b28a93"){ //Farmacias
+    }else if (role_id == "Farmacia"){ //Farmacias
       let message = "Por favor ingresa nuevamente tus datos para acceder a la aplicación";
       this.showPrompt(message);
     }
+  }
+
+  getPharmacies(){
+    var apiURL = this.globalDataCtrl.getApiURL();
+    return new Promise(resolve => {
+      this.http.get(apiURL+'Pharmacies').subscribe((data: any[]) => {
+        resolve(this.allPharmacies = data);
+      }, err => {
+        console.log(err);
+      });
+    });
+  }
+
+  getDoctors(){
+    var apiURL = this.globalDataCtrl.getApiURL();
+    return new Promise(resolve => {
+      this.http.get(apiURL+'Doctors').subscribe((data: any[]) => {
+        resolve(this.allDoctors = data);
+      }, err => {
+        console.log(err);
+      });
+    });
   }
 
   showPrompt(message) {

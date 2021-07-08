@@ -26,6 +26,7 @@ import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { DatabaseServiceProvider } from '../providers/database-service/database-service';
 import { BrMaskerModule } from 'brmasker-ionic-3';
+import { HttpClientModule } from '@angular/common/http';
 
 import { NgxQRCodeModule } from 'ngx-qrcode2';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
@@ -74,7 +75,8 @@ var config = {
     AngularFireDatabaseModule,
     AngularFirestoreModule,
     BrMaskerModule,
-    NgxQRCodeModule
+    NgxQRCodeModule,
+    HttpClientModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
