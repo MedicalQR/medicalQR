@@ -3,19 +3,12 @@ import { NgModule, ErrorHandler } from '@angular/core';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 
-import { HelloIonicPage } from '../pages/hello-ionic/hello-ionic';
-import { ItemDetailsPage } from '../pages/item-details/item-details';
-import { ListPage } from '../pages/list/list';
 import { LoginPage } from '../pages/login/login';
 import { HomeDoctorsPage } from '../pages/home-doctors/home-doctors';
 import { HomePharmacyPage } from '../pages/home-pharmacy/home-pharmacy';
-import { HomeMinistryPage } from '../pages/home-ministry/home-ministry';
-import { HomeGuestPage } from '../pages/home-guest/home-guest';
 import { NewQrPage } from '../pages/new-qr/new-qr';
-import { ModalDoctorPage } from '../pages/modal-doctor/modal-doctor';
 import { RegisterPage } from '../pages/register/register';
 import { ModalQrPage } from '../pages/modal-qr/modal-qr';
-import { ChangePasswordPage } from '../pages/change-password/change-password';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -50,21 +43,13 @@ var config = {
 @NgModule({
   declarations: [
     MyApp,
-    HelloIonicPage,
-    ItemDetailsPage,
-    ListPage,
     LoginPage,
     HomeDoctorsPage,
     HomePharmacyPage,
-    HomeMinistryPage,
-    HomeGuestPage,
-    ModalDoctorPage,
     RegisterPage,
     NewQrPage,
-    ModalDoctorPage,
     ModalQrPage,
     ModalPharmacyPage,
-    ChangePasswordPage,
     UserProfilePage
   ],
   imports: [
@@ -81,21 +66,13 @@ var config = {
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    HelloIonicPage,
-    ItemDetailsPage,
-    ListPage,
     LoginPage,
     HomeDoctorsPage,
     HomePharmacyPage,
-    HomeMinistryPage,
-    HomeGuestPage,
-    ModalDoctorPage,
     RegisterPage,
     NewQrPage,
-    ModalDoctorPage,
     ModalQrPage,
     ModalPharmacyPage,
-    ChangePasswordPage,
     UserProfilePage
   ],
   providers: [

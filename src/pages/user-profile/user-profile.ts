@@ -2,13 +2,11 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, MenuController, NavParams, ViewController } from 'ionic-angular';
 import { GlobalDataProvider } from '../../providers/global-data/global-data';
 import { DatabaseServiceProvider } from '../../providers/database-service/database-service';
-import { ChangePasswordPage } from '../change-password/change-password';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
 import { HttpClient } from '@angular/common/http';
 import { HomeDoctorsPage } from '../home-doctors/home-doctors';
 import { HomePharmacyPage } from '../home-pharmacy/home-pharmacy';
-import { HomeMinistryPage } from '../home-ministry/home-ministry';
 import { AlertController } from 'ionic-angular';
 import { Guid } from "guid-typescript";
 
@@ -43,9 +41,6 @@ export class UserProfilePage {
     }
     else if(this.role == "Farmacia") {
       url = "pharmacies/"
-    }
-    else { 
-      url = "admins/"
     }
     this.getUserById(url + user_id).then((result) => {
       console.log(this.loggedUser);
@@ -106,17 +101,6 @@ export class UserProfilePage {
       }
       this.updateUser(updatedUser, "pharmacies");
     }
-    else { 
-      updatedUser = {
-        name : this.loggedUser.name,
-        lastName: this.loggedUser.lastName,
-        email : this.loggedUser.email,
-        id : this.loggedUser.id,
-        GmailID: user.uid,
-        FacebookID: this.loggedUser.FacebookID,
-      }
-      this.updateUser(updatedUser, "admins");
-    }
  }
 
   async loginFacebook() {
@@ -150,17 +134,6 @@ export class UserProfilePage {
         }
         this.updateUser(updatedUser, "pharmacies");
       }
-      else { 
-        updatedUser = {
-          name : this.loggedUser.name,
-          lastName: this.loggedUser.lastName,
-          email : this.loggedUser.email,
-          id : this.loggedUser.id,
-          GmailID: this.loggedUser.GmailID,
-          FacebookID: Guid.create().toString(),
-        }
-        this.updateUser(updatedUser, "admins");
-      }
     /*})
     .catch(err => { 
         console.log(err.message);
@@ -179,9 +152,6 @@ export class UserProfilePage {
     }
     else if(this.role == "Farmacia") {
       this.navCtrl.push(HomePharmacyPage);
-    }
-    else { 
-      this.navCtrl.push(HomeMinistryPage);
     }
   }
   
@@ -212,17 +182,6 @@ export class UserProfilePage {
       }
       this.updateUser(updatedUser, "pharmacies");
     }
-    else { 
-      updatedUser = {
-        name : this.loggedUser.name,
-        lastName: this.loggedUser.lastName,
-        email : this.loggedUser.email,
-        id : this.loggedUser.id,
-        GmailID: null,
-        FacebookID: this.loggedUser.FacebookID,
-      }
-      this.updateUser(updatedUser, "admins");
-    }
   }
 
   removeFacebook(){
@@ -251,17 +210,6 @@ export class UserProfilePage {
         FacebookID: null,
       }
       this.updateUser(updatedUser, "pharmacies");
-    }
-    else { 
-      updatedUser = {
-        name : this.loggedUser.name,
-        lastName: this.loggedUser.lastName,
-        email : this.loggedUser.email,
-        id : this.loggedUser.id,
-        GmailID: this.loggedUser.GmailID,
-        FacebookID: null,
-      }
-      this.updateUser(updatedUser, "admins");
     }
   }
 }

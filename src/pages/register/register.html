@@ -33,13 +33,13 @@
         <ion-item *ngIf="newUser.controls.email.dirty && newUser.controls.email.hasError('email')">
           <p>e-mail inválido</p>
         </ion-item>
-        <ion-item *ngIf="newUser.value.role_id=='Profesionales de la Salud' || newUser.value.role_id=='Administrador'">
+        <ion-item *ngIf="newUser.value.role_id=='Profesionales de la Salud'">
           <ion-label color="dark-yellow">
             Nombre 
           </ion-label>
           <ion-input type="text" formControlName="name" name="name"></ion-input>
         </ion-item>
-        <ion-item *ngIf="newUser.value.role_id=='Profesionales de la Salud' || newUser.value.role_id=='Administrador'">
+        <ion-item *ngIf="newUser.value.role_id=='Profesionales de la Salud'">
           <ion-label color="dark-yellow">
             Apellido 
           </ion-label>

@@ -33,7 +33,7 @@
     <ion-item-sliding  #item *ngFor="let qr of qrs">
       <ion-item>
         <ion-thumbnail item-start>
-          <img src="{{qr.image}}">
+          <ngx-qrcode [qrc-value]="qr.id"></ngx-qrcode>
         </ion-thumbnail>
         <p item-end>{{qr.status}}</p>
       </ion-item>   

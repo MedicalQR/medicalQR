@@ -11,6 +11,7 @@ import { Injectable } from '@angular/core';
 export class GlobalDataProvider {
 
   user_id : any;
+  email: any;
   role : any;
   gmail_id : any;
   facebook_id : any;
@@ -19,6 +20,7 @@ export class GlobalDataProvider {
 
   constructor() {
     this.user_id = "";
+    this.email = "";
     this.gmail_id = "";
     this.facebook_id = "";
     this.role = "";
@@ -32,6 +34,14 @@ export class GlobalDataProvider {
 
   getUser_id() {
     return this.user_id;
+  }
+
+  setUserEmail(value) {
+    this.email = value;
+  }
+
+  getUserEmail() {
+    return this.email;
   }
 
   setRole(value) {

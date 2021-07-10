@@ -3,14 +3,11 @@ import { IonicPage, NavController, MenuController, NavParams } from 'ionic-angul
 import { DatabaseServiceProvider } from '../../providers/database-service/database-service';
 import { HomeDoctorsPage } from '../home-doctors/home-doctors';
 import { HomePharmacyPage } from '../home-pharmacy/home-pharmacy';
-import { HomeMinistryPage } from '../home-ministry/home-ministry';
-import { HomeGuestPage } from '../home-guest/home-guest';
 import { RegisterPage } from '../register/register';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { BrMaskerModule } from 'brmasker-ionic-3';
 import { AlertController } from 'ionic-angular';
 import {Md5} from 'ts-md5/dist/md5';
-import {ChangePasswordPage} from '../change-password/change-password';
 import { GlobalDataProvider } from '../../providers/global-data/global-data';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
@@ -28,7 +25,6 @@ export class LoginPage {
 
   doctors: any[];
   pharmacies: any[];
-  admins: any[];
   allRoles: any[];
   
   loggedUser : any = {};
@@ -59,9 +55,6 @@ export class LoginPage {
         "name": "Profesionales de la Salud",
       },
       {
-        "name": "Administrador",
-      },
-      {
         "name": "Farmacia",
       }
     ];
@@ -81,6 +74,7 @@ export class LoginPage {
             this.existingUser = doctor;
             this.setGlobalInformation(doctor.id, "Profesionales de la Salud");
             if(this.existingUser.Status == 'Activo'){
+              this.globalDataCtrl.setUserEmail(this.existingUser.email);
               this.globalDataCtrl.setHomePage(HomeDoctorsPage);
               this.navCtrl.push(HomeDoctorsPage, {
                 id: this.existingUser.id
@@ -98,22 +92,9 @@ export class LoginPage {
               if(pharmacy.GmailID == this.uid){
                 this.existingUser = pharmacy;
                 this.setGlobalInformation(pharmacy.id, "Farmacia");
+                this.globalDataCtrl.setUserEmail(this.existingUser.email);
                 this.globalDataCtrl.setHomePage(HomePharmacyPage);
                 this.navCtrl.push(HomePharmacyPage);
-              }
-            });
-          }
-        });
-      }
-      if(this.existingUser == null) {
-        this.getAdmins().then((result) => {
-          if(this.admins.length > 0){
-            this.admins.forEach(admin => {
-              if(admin.GmailID == this.uid){
-                this.existingUser = admin;
-                this.setGlobalInformation(admin.id, "Administrator");
-                this.globalDataCtrl.setHomePage(HomeMinistryPage);
-                this.navCtrl.push(HomeMinistryPage);
               }
             });
           }
@@ -136,6 +117,7 @@ export class LoginPage {
               this.existingUser = doctor;
               this.setGlobalInformation(doctor.id, "Profesionales de la Salud");
               if(this.existingUser.Status == 'Activo'){
+                this.globalDataCtrl.setUserEmail(this.existingUser.email);
                 this.globalDataCtrl.setHomePage(HomeDoctorsPage);
                 this.navCtrl.push(HomeDoctorsPage, {
                   id: this.existingUser.id
@@ -152,23 +134,10 @@ export class LoginPage {
               this.pharmacies.forEach(pharmacy => {
                 if(pharmacy.FacebookID == this.uid){
                   this.existingUser = pharmacy;
+                  this.globalDataCtrl.setUserEmail(this.existingUser.email);
                   this.setGlobalInformation(pharmacy.id, "Farmacia");
                   this.globalDataCtrl.setHomePage(HomePharmacyPage);
                   this.navCtrl.push(HomePharmacyPage);
-                }
-              });
-            }
-          });
-        }
-        if(this.existingUser == null) {
-          this.getAdmins().then((result) => {
-            if(this.admins.length > 0){
-              this.admins.forEach(admin => {
-                if(admin.FacebookID == this.uid){
-                  this.existingUser = admin;
-                  this.setGlobalInformation(admin.id, "Administrator");
-                  this.globalDataCtrl.setHomePage(HomeMinistryPage);
-                  this.navCtrl.push(HomeMinistryPage);
                 }
               });
             }
@@ -204,17 +173,6 @@ export class LoginPage {
     return new Promise(resolve => {
       this.http.get(apiURL+'Pharmacies').subscribe((data: any[]) => {
         resolve(this.pharmacies = data);
-      }, err => {
-        console.log(err);
-      });
-    });
-  }
-
-  getAdmins(){
-    var apiURL = this.globalDataCtrl.getApiURL();
-    return new Promise(resolve => {
-      this.http.get(apiURL+'Admins').subscribe((data: any[]) => {
-        resolve(this.admins = data);
       }, err => {
         console.log(err);
       });

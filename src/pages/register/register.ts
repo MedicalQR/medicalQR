@@ -27,7 +27,6 @@ export class RegisterPage {
   newUser : any = {};
   allPharmacies : any[];
   allDoctors : any[];
-  allAdmins : any[];
   allRoles : any = [];
   allStates : any = [];
   errorMessage : any;
@@ -62,9 +61,6 @@ export class RegisterPage {
     this.allRoles = [
       {
         "name": "Profesionales de la Salud",
-      },
-      {
-        "name": "Administrador",
       },
       {
         "name": "Farmacia",
@@ -151,16 +147,6 @@ export class RegisterPage {
         }
       });
     }
-    else {
-      let createdUser = {
-        name : this.newUser.value.name,
-        lastname: this.newUser.value.lastname,
-        email : this.newUser.value.email,
-        id : Guid.create().toString(),
-        GmailID: this.globalDataCtrl.getGmailId(),
-        FacebookID: this.globalDataCtrl.getFacebookId()
-      }
-    }
   }
 
   setValidatorsForMedicalLicense(){
@@ -180,13 +166,6 @@ export class RegisterPage {
       this.newUser.get("companyname").updateValueAndValidity();
       this.newUser.controls["businessname"].setValidators([Validators.required])
       this.newUser.get("businessname").updateValueAndValidity();
-    }
-    else {
-      //Habilitar
-      this.newUser.controls["name"].setValidators([Validators.required])
-      this.newUser.get("name").updateValueAndValidity();
-      this.newUser.controls["lastname"].setValidators([Validators.required])
-      this.newUser.get("lastname").updateValueAndValidity();
     }
   }
 

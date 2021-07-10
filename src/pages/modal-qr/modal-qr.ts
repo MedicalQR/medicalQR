@@ -42,6 +42,24 @@ export class ModalQrPage {
     }
 
     sendEmail(){
-      alert("Imprimir");
+      var apiURL = this.globalDataCtrl.getApiURL();
+      return new Promise(resolve => {
+        this.http.get(apiURL+'UniqueIdentifierCodes?id=' + this.qr.id + '&email=' + this.globalDataCtrl.getUserEmail()).subscribe((data: any[]) => {
+          resolve(data);
+          this.showPrompt();
+        }, err => {
+          console.log(err);
+        });
+      });
+    }
+
+    showPrompt() {
+      const alert = this.alertCtrl.create({
+        title: "Email enviado",
+        subTitle: "Se ha enviado la información del Código Único de Identificación a su correo.",
+        buttons: ['OK']
+      });
+      alert.present();
+      this.dismiss();
     }
   }

@@ -20,7 +20,7 @@ export class NewQrPage {
   constructor(public alertCtrl: AlertController, public navCtrl: NavController, public navParams: NavParams, public http: HttpClient, public firebase: DatabaseServiceProvider,  public globalDataCtrl: GlobalDataProvider) {}
 
   ionViewDidLoad(){
-    this.createCode()
+    this.createCode();
   }
 
   createCode(){
@@ -63,7 +63,19 @@ export class NewQrPage {
       buttons: ['OK']
     });
     alert.present();
+    this.sendEmail();
     this.navCtrl.push(HomeDoctorsPage);
+  }
+
+  sendEmail() {
+    var apiURL = this.globalDataCtrl.getApiURL();
+    return new Promise(resolve => {
+      this.http.get(apiURL+'UniqueIdentifierCodes?id=' + this.createdCode + '&email=' + this.globalDataCtrl.getUserEmail()).subscribe((data: any[]) => {
+        resolve(data);
+      }, err => {
+        console.log(err);
+      });
+    });
   }
 
   ignoreCode() {

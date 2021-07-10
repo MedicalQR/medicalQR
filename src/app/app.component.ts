@@ -2,20 +2,14 @@ import { Component, ViewChild } from '@angular/core';
 
 import { Platform, MenuController, Nav } from 'ionic-angular';
 
-import { HelloIonicPage } from '../pages/hello-ionic/hello-ionic';
-import { ListPage } from '../pages/list/list';
 import { LoginPage } from '../pages/login/login';
-
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { HomeDoctorsPage } from '../pages/home-doctors/home-doctors';
-import { HomeMinistryPage } from '../pages/home-ministry/home-ministry';
 import { HomePharmacyPage } from '../pages/home-pharmacy/home-pharmacy';
-import { ModalDoctorPage } from '../pages/modal-doctor/modal-doctor';
 import { RegisterPage } from '../pages/register/register';
 import { ModalQrPage } from '../pages/modal-qr/modal-qr';
 import { ModalPharmacyPage } from '../pages/modal-pharmacy/modal-pharmacy';
-import { ChangePasswordPage } from '../pages/change-password/change-password';
 import { UserProfilePage } from '../pages/user-profile/user-profile';
 import { GlobalDataProvider } from '../providers/global-data/global-data';
 
