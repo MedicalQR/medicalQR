@@ -4,6 +4,9 @@ import { Guid } from "guid-typescript";
 import { DatabaseServiceProvider } from '../../providers/database-service/database-service';
 import { HomeDoctorsPage } from '../home-doctors/home-doctors';
 import { GlobalDataProvider } from '../../providers/global-data/global-data';
+import { HttpClient } from '@angular/common/http';
+import { AlertController } from 'ionic-angular';
+
 
 @IonicPage()
 @Component({
@@ -14,7 +17,7 @@ export class NewQrPage {
   qrData: Guid;
   createdCode = null;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public firebase: DatabaseServiceProvider,  public globalDataCtrl: GlobalDataProvider) {}
+  constructor(public alertCtrl: AlertController, public navCtrl: NavController, public navParams: NavParams, public http: HttpClient, public firebase: DatabaseServiceProvider,  public globalDataCtrl: GlobalDataProvider) {}
 
   ionViewDidLoad(){
     this.createCode()
@@ -27,34 +30,39 @@ export class NewQrPage {
   saveCode() {
     let image = document.getElementsByClassName("qrcode")[0].innerHTML;
     image = image.slice(10,-2);
-
-    let dd = "";
-    let mm = "";
-    let now = new Date();
-    let day = now.getDate();
-    let month = now.getMonth()+1;
-    let yyyy = now.getFullYear();
-
-    if(day < 10)
-      dd = "0" + day;
-    else 
-      dd = day.toString();
-
-    if(month < 10){
-      mm = "0" + month;
-    } 
-
-    let today = dd +'/'+ mm +'/'+ yyyy;
+    let today = new Date();
 
     let qr_code = {
       "id": this.createdCode,
-      "creation_date": today,
+      "creationDate": today,
       "image": image,
-      "modification_date": today,
-      "qr_state_id": "57cc0115-360b-4af3-ad5d-da275d6243d3",
-      "user_id": this.globalDataCtrl.getUser_id()
+      "modificationDate": today,
+      "status": "Pendiente",
+      "doctorId": this.globalDataCtrl.getUser_id()
     }
-    this.firebase.createQR(qr_code);
+
+    this.createQR(qr_code);
+  }
+
+  createQR(qr_code){
+    var apiURL = this.globalDataCtrl.getApiURL();
+    return new Promise(resolve => {
+      this.http.post(apiURL+'UniqueIdentifierCodes', qr_code).subscribe(data => {
+        resolve(data);
+        this.showPrompt();
+      }, err => {
+        console.log(err);
+      });
+    });
+  }
+
+  showPrompt() {
+    const alert = this.alertCtrl.create({
+      title: "Creación exitosa",
+      subTitle: "Se ha generado un nuevo Código Único de Identificación.",
+      buttons: ['OK']
+    });
+    alert.present();
     this.navCtrl.push(HomeDoctorsPage);
   }
 

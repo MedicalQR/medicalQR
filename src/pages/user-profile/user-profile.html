@@ -1,46 +1,72 @@
-<!--
-  Generated template for the UserProfilePage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
-
   <ion-navbar hideBackButton>
     <ion-title>Perfil de usuario</ion-title>
   </ion-navbar>
-
 </ion-header>
-
 
 <ion-content padding>
   <ion-content>
       <ion-list>  
-          <ion-item>
+          <ion-item *ngIf="this.role != 'Farmacia'">
             Nombre
             <ion-note item-end>
               {{loggedUser.name}}
             </ion-note>
           </ion-item>
-          <ion-item>
+          <ion-item *ngIf="this.role != 'Farmacia'">
+            Apellido
+            <ion-note item-end>
+              {{loggedUser.lastName}}
+            </ion-note>
+          </ion-item>
+          <ion-item *ngIf="this.role == 'Profesionales de la Salud'">
+            Licencia Médica
+            <ion-note item-end>
+              {{loggedUser.medicalLicense}}
+            </ion-note>
+          </ion-item>
+          <ion-item *ngIf="this.role == 'Farmacia'">
             CUIL
             <ion-note item-end>
               {{loggedUser.document}}
             </ion-note>
           </ion-item>
+          <ion-item *ngIf="this.role == 'Farmacia'">
+            Nombre de la farmacia
+            <ion-note item-end>
+              {{loggedUser.companyname}}
+            </ion-note>
+          </ion-item>
+          <ion-item *ngIf="this.role == 'Farmacia'">
+            Razon Social
+            <ion-note item-end>
+              {{loggedUser.buisinessname}}
+            </ion-note>
+          </ion-item>
           <ion-item>
-            e-mail
+            E-mail
             <ion-note item-end>
               {{loggedUser.email}}
             </ion-note>
           </ion-item>
-          <ion-item *ngIf="loggedUser.role_id=='37a938a1-e7f0-42c2-adeb-b8a9a36b6cb8'">
-            Licencia médica
-            <ion-note item-end>
-              {{loggedUser.license}}
-            </ion-note>
+          <ion-item>
+            <button ion-button color="danger" [disabled]="loggedUser.GmailID!='' && loggedUser.GmailID!=null" (click)="loginGoogle()">
+              <ion-icon name="logo-google">&nbsp;</ion-icon>
+              Ingresar con Google
+            </button>
+            <button ion-button color="light" [disabled]="loggedUser.GmailID=='' || loggedUser.GmailID==null || loggedUser.FacebookID=='' || loggedUser.FacebookID==null" (click)="removeGmail()">
+              X
+            </button>
+          </ion-item>
+          <ion-item>
+            <button ion-button color="primary" [disabled]="loggedUser.FacebookID!='' && loggedUser.FacebookID!=null" (click)="loginFacebook()">
+              <ion-icon name="logo-facebook">&nbsp;</ion-icon>
+              Ingresar con Facebook
+            </button>
+            <button ion-button color="light" [disabled]="loggedUser.FacebookID=='' || loggedUser.FacebookID==null || loggedUser.GmailID=='' || loggedUser.GmailID==null" (click)="removeFacebook()">
+              X
+            </button>
           </ion-item>
       </ion-list>
-      <button ion-button full color="secondary" (click)="goTo_changePage()">Cambiar contraseña</button>
     </ion-content>
 </ion-content>

@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { ModalController, Platform, NavParams, ViewController } from 'ionic-angular';
 import { DatabaseServiceProvider } from '../../providers/database-service/database-service';
+import { GlobalDataProvider } from '../../providers/global-data/global-data';
+import { HttpClient } from '@angular/common/http';
+import { AlertController } from 'ionic-angular';
 
 @Component({
   selector: 'page-modal-qr',
@@ -11,7 +14,7 @@ export class ModalQrPage {
     qr: any;
     id: any;
   
-    constructor(public platform: Platform,public params: NavParams,public viewCtrl: ViewController,public firebase: DatabaseServiceProvider) {
+    constructor(public platform: Platform,public params: NavParams,public viewCtrl: ViewController,public firebase: DatabaseServiceProvider, public alertCtrl: AlertController, public http: HttpClient, public globalDataCtrl: GlobalDataProvider) {
       this.id = this.params.get('qr_id');    
       var qr = {};
       this.qr = qr;    
@@ -26,23 +29,19 @@ export class ModalQrPage {
     }
 
     obtainQRById(){
-        this.firebase.getQRById(this.id).valueChanges().subscribe(
-          qr => {
-            this.qr = qr[0];
-            this.getQRState(this.qr);
-            console.log(this.qr);
-        })
+      var apiURL = this.globalDataCtrl.getApiURL();
+      return new Promise(resolve => {
+        this.http.get(apiURL+'UniqueIdentifierCodes/' + this.id).subscribe((data: any[]) => {
+          resolve(this.qr = data);
+          this.qr.creationDate = new Date(this.qr.creationDate).toLocaleString();
+          this.qr.modificationDate = new Date(this.qr.modificationDate).toLocaleString();
+        }, err => {
+          console.log(err);
+        });
+      });
     }
 
-    getQRState(qr) {
-      this.firebase.getStateById(qr.qr_state_id).valueChanges().subscribe(
-        qr_state => { 
-          qr.state = qr_state[0];
-          this.qr = qr;
-      });    
-    }
-
-    printQR(){
+    sendEmail(){
       alert("Imprimir");
     }
   }

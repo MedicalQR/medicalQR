@@ -3,6 +3,8 @@ import { IonicPage, NavController, NavParams, ModalController, MenuController } 
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { DatabaseServiceProvider } from '../../providers/database-service/database-service';
 import { ModalPharmacyPage } from '../modal-pharmacy/modal-pharmacy';
+import { HttpClient } from '@angular/common/http';
+import { GlobalDataProvider } from '../../providers/global-data/global-data';
 
 @IonicPage()
 @Component({
@@ -17,7 +19,7 @@ export class HomePharmacyPage {
   qr: any;
   doctor: any;
  
-  constructor(public navCtrl: NavController, public navParams: NavParams, private barcodeScanner: BarcodeScanner, public firebase: DatabaseServiceProvider, public modalCtrl: ModalController, public menuCtrl: MenuController) 
+  constructor(public navCtrl: NavController, public navParams: NavParams, private barcodeScanner: BarcodeScanner, public firebase: DatabaseServiceProvider, public modalCtrl: ModalController, public menuCtrl: MenuController, public globalDataCtrl: GlobalDataProvider, public http: HttpClient) 
   {
     this.menuCtrl.enable(true, "myMenu");
   }
@@ -28,38 +30,38 @@ export class HomePharmacyPage {
   }
 
   scanCode() {
-    this.barcodeScanner.scan().then(barcodeData => {
-      this.scannedCode = barcodeData.text;
-      //this.scannedCode = "c3f600c7-6b53-d438-ddba-cf84bcd2ae73";
-      this.firebase.getQRById(this.scannedCode).valueChanges().subscribe(
-        qr => {
-          this.qr = qr[0]; 
-          this.getQRState();
-      })
-    }, 
+    //this.barcodeScanner.scan().then(barcodeData => {
+      //this.scannedCode = barcodeData.text;
+      this.scannedCode = "9DD6E0B5-2E94-8295-D310-8DBB0878A8C6";
+      var apiURL = this.globalDataCtrl.getApiURL();
+      return new Promise(resolve => {
+        this.http.get(apiURL+'UniqueIdentifierCodes/' + this.scannedCode).subscribe((data: any[]) => {
+          resolve(this.qr = data);
+          this.getDoctorInformation()
+        }, err => {
+          console.log(err);
+        });
+      });
+    /*}, 
     (err) => {
         console.log('Error: ', err);
-    });
+    });*/
   }
   
-  getQRState() {
-    this.firebase.getStateById(this.qr.qr_state_id).valueChanges().subscribe(
-      qr_state => {
-        this.qr.state = qr_state[0];
-        this.getDoctorInformation();
-    })
-  }
-
   getDoctorInformation() {
-    this.firebase.getDoctorById(this.qr.user_id).valueChanges().subscribe(
-      doctor => {
-        this.doctor = doctor[0];
+    var apiURL = this.globalDataCtrl.getApiURL();
+    return new Promise(resolve => {
+      this.http.get(apiURL+'doctors/' + this.qr.doctorId).subscribe((data: any[]) => {
+        resolve(this.doctor = data);
         this.openModal();
-    })
+      }, err => {
+        console.log(err);
+      });
+    });
   }
 
   openModal() { 
-    let modal = this.modalCtrl.create(ModalPharmacyPage, {qr_id: this.qr.id});
+    let modal = this.modalCtrl.create(ModalPharmacyPage, {qr: this.qr});
     modal.present();
   }
 }

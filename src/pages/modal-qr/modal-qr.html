@@ -23,21 +23,21 @@
         <ion-item>
           Fecha de creación
           <ion-note item-end>
-            {{qr.creation_date}}
+            {{qr.creationDate}}
           </ion-note>
         </ion-item>
         <ion-item>
           Fecha última modificación
           <ion-note item-end>
-            {{qr.modification_date}}
+            {{qr.modificationDate}}
           </ion-note>
         </ion-item>
         <ion-item>
           Estado
           <ion-note item-end>
-            {{qr.state}}
+            {{qr.status}}
           </ion-note>
         </ion-item>
     </ion-list>
-    <button ion-button full (click)="printQR()">Imprimir QR</button>
+    <button ion-button full (click)="sendEmail()">Enviar por mail</button>
   </ion-content>

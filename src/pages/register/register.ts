@@ -72,14 +72,6 @@ export class RegisterPage {
     ];
   }
 
-  obtainAllUsersStates(){
-    this.firebase.getAllUsersStates().valueChanges().subscribe(
-      usersStates => {
-        this.allStates = usersStates;
-      }
-    )
-  }
-
   registerForm(){
     this.errorMessage = null;
     this.newUser.value.document = this.newUser.value.document.replace('-', '');
@@ -93,6 +85,8 @@ export class RegisterPage {
           this.allDoctors.forEach(doctor => {
             if(doctor.medicalLicense == this.newUser.value.license){
               this.errorMessage = "Ya se encuentra registrado un Profesional de la Salud con esa licencia médica.";
+              let title = "Usuario ya existente";
+              this.showPrompt(this.errorMessage, title);
             }
           });
         }
@@ -106,7 +100,7 @@ export class RegisterPage {
             id : Guid.create().toString(),
             Status : 'Inactivo',
             GmailID: this.globalDataCtrl.getGmailId(),
-            FacebookID: ''
+            FacebookID: this.globalDataCtrl.getFacebookId()
           }
   
           var apiURL = this.globalDataCtrl.getApiURL();
@@ -127,6 +121,8 @@ export class RegisterPage {
           this.allPharmacies.forEach(pharmacy => {
             if(pharmacy.cuit == this.newUser.value.document){
               this.errorMessage = "Una Farmacia con ese CUIT ya se encuentra registrado.";
+              let title = "Usuario ya existente";
+              this.showPrompt(this.errorMessage, title);
             }
           });
         }
@@ -134,11 +130,13 @@ export class RegisterPage {
         if(this.errorMessage == null) {
           let createdUser = {
             cuit : this.newUser.value.document,
+            email: this.newUser.value.email,
             company_name : this.newUser.value.companyname,
-            buisiness_name : this.newUser.value.buisinessname,
-            role_id : this.newUser.value.role_id,
+            business_name : this.newUser.value.businessname,
             id : Guid.create().toString(),
-            Status : 'Inactivo'
+            Status : 'Inactivo',
+            GmailID: this.globalDataCtrl.getGmailId(),
+            FacebookID: this.globalDataCtrl.getFacebookId()
           }
   
           var apiURL = this.globalDataCtrl.getApiURL();
@@ -158,8 +156,9 @@ export class RegisterPage {
         name : this.newUser.value.name,
         lastname: this.newUser.value.lastname,
         email : this.newUser.value.email,
-        role_id : this.newUser.value.role_id,
         id : Guid.create().toString(),
+        GmailID: this.globalDataCtrl.getGmailId(),
+        FacebookID: this.globalDataCtrl.getFacebookId()
       }
     }
   }
@@ -179,8 +178,8 @@ export class RegisterPage {
       this.newUser.get("document").updateValueAndValidity();
       this.newUser.controls["companyname"].setValidators([Validators.required])
       this.newUser.get("companyname").updateValueAndValidity();
-      this.newUser.controls["buisinessname"].setValidators([Validators.required])
-      this.newUser.get("buisinessname").updateValueAndValidity();
+      this.newUser.controls["businessname"].setValidators([Validators.required])
+      this.newUser.get("businessname").updateValueAndValidity();
     }
     else {
       //Habilitar
@@ -192,12 +191,13 @@ export class RegisterPage {
   }
 
   goToHome(role_id){
+    let title = '¡Gracias por registrarte!';
     if (role_id == "Profesionales de la Salud"){ //Doctores
       let message = "El Ministerio de salud deberá habilitar tu registro en no menos de 48 horas, te avisaremos una vez el Ministerio habilite tu registro";
-      this.showPrompt(message);
-    }else if (role_id == "Farmacia"){ //Farmacias
+      this.showPrompt(message, title);
+    }else{ //Farmacias y Administradores
       let message = "Por favor ingresa nuevamente tus datos para acceder a la aplicación";
-      this.showPrompt(message);
+      this.showPrompt(message, title);
     }
   }
 
@@ -223,9 +223,9 @@ export class RegisterPage {
     });
   }
 
-  showPrompt(message) {
+  showPrompt(message, title) {
     const alert = this.alertCtrl.create({
-      title: '¡Gracias por registrarte!',
+      title: title,
       subTitle: message,
       buttons: ['OK']
     });

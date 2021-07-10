@@ -69,24 +69,27 @@ export class LoginPage {
 
   async loginGoogle() {
     this.existingUser = null;
-    const res = await this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+    let googleProvider = new firebase.auth.GoogleAuthProvider();
+    const res = await this.afAuth.auth.signInWithPopup(googleProvider);
     const user = res.user;
     this.uid = user.uid; 
     this.globalDataCtrl.setGmailId(this.uid);
-
     this.getDoctors().then((result) => {
       if(this.doctors.length > 0){
         this.doctors.forEach(doctor => {
           if(doctor.GmailID == this.uid){
             this.existingUser = doctor;
-            this.existingUser.role = 'Doctor';
-            this.globalDataCtrl.setHomePage(HomeDoctorsPage);
-            this.navCtrl.push(HomeDoctorsPage, {
-              id: this.existingUser.id
-            });
+            this.setGlobalInformation(doctor.id, "Profesionales de la Salud");
+            if(this.existingUser.Status == 'Activo'){
+              this.globalDataCtrl.setHomePage(HomeDoctorsPage);
+              this.navCtrl.push(HomeDoctorsPage, {
+                id: this.existingUser.id
+              });
+            } else {
+              this.goToHome("Profesionales de la Salud");
+            }
           }
         });
-        console.log("finished doctors");
       }
       if(this.existingUser == null){
         this.getPharmacies().then((result) => {
@@ -94,14 +97,13 @@ export class LoginPage {
             this.pharmacies.forEach(pharmacy => {
               if(pharmacy.GmailID == this.uid){
                 this.existingUser = pharmacy;
-                this.existingUser.role = 'Pharmacy';
+                this.setGlobalInformation(pharmacy.id, "Farmacia");
                 this.globalDataCtrl.setHomePage(HomePharmacyPage);
                 this.navCtrl.push(HomePharmacyPage);
               }
             });
           }
         });
-        console.log("finished pharmacies");
       }
       if(this.existingUser == null) {
         this.getAdmins().then((result) => {
@@ -109,14 +111,13 @@ export class LoginPage {
             this.admins.forEach(admin => {
               if(admin.GmailID == this.uid){
                 this.existingUser = admin;
-                this.existingUser.role = 'Administrator';
+                this.setGlobalInformation(admin.id, "Administrator");
                 this.globalDataCtrl.setHomePage(HomeMinistryPage);
                 this.navCtrl.push(HomeMinistryPage);
               }
             });
           }
         });
-        console.log("finished admins");
       }
       if(this.existingUser == null) {
         this.navCtrl.push(RegisterPage);
@@ -125,27 +126,62 @@ export class LoginPage {
  }
   
   async loginFacebook() {
-    var provider = new firebase.auth.FacebookAuthProvider();
-    this.afAuth.auth.signInWithPopup(provider)
+    var facebookProvider = new firebase.auth.FacebookAuthProvider();
+    this.afAuth.auth.signInWithPopup(facebookProvider)
     .then((result) => {
-        //Si es la primera vez que inician sesión utilizando Facebook debería ser redirigido a la página de Registro/Brindarle tambien la posiblidad de loguearse, por si su cuenta ya existe. 
-        //Si NO es la primera vez, debería validarse el ID de Facebook con el usuario que esté creado y redirigir a esa página.
-        console.log(result);
-        this.globalDataCtrl.setHomePage(HomeGuestPage);
-        this.navCtrl.push(HomeGuestPage);
+      this.getDoctors().then((result) => {
+        if(this.doctors.length > 0){
+          this.doctors.forEach(doctor => {
+            if(doctor.FacebookID == this.uid){
+              this.existingUser = doctor;
+              this.setGlobalInformation(doctor.id, "Profesionales de la Salud");
+              if(this.existingUser.Status == 'Activo'){
+                this.globalDataCtrl.setHomePage(HomeDoctorsPage);
+                this.navCtrl.push(HomeDoctorsPage, {
+                  id: this.existingUser.id
+                });
+              } else {
+                this.goToHome("Profesionales de la Salud");
+              }
+            }
+          });
+        }
+        if(this.existingUser == null){
+          this.getPharmacies().then((result) => {
+            if(this.pharmacies.length > 0){
+              this.pharmacies.forEach(pharmacy => {
+                if(pharmacy.FacebookID == this.uid){
+                  this.existingUser = pharmacy;
+                  this.setGlobalInformation(pharmacy.id, "Farmacia");
+                  this.globalDataCtrl.setHomePage(HomePharmacyPage);
+                  this.navCtrl.push(HomePharmacyPage);
+                }
+              });
+            }
+          });
+        }
+        if(this.existingUser == null) {
+          this.getAdmins().then((result) => {
+            if(this.admins.length > 0){
+              this.admins.forEach(admin => {
+                if(admin.FacebookID == this.uid){
+                  this.existingUser = admin;
+                  this.setGlobalInformation(admin.id, "Administrator");
+                  this.globalDataCtrl.setHomePage(HomeMinistryPage);
+                  this.navCtrl.push(HomeMinistryPage);
+                }
+              });
+            }
+          });
+        }
+        if(this.existingUser == null) {
+          this.navCtrl.push(RegisterPage);
+        }
+      });
     })
     .catch(err => { 
         console.log(err.message);
     })
-  }
-
-  showPrompt(message) {
-    const alert = this.alertCtrl.create({
-      title: message.tittle,
-      subTitle: message.subtittle,
-      buttons: ['OK']
-    });
-    alert.present();
   }
 
   register() {
@@ -183,5 +219,30 @@ export class LoginPage {
         console.log(err);
       });
     });
+  }
+
+  goToHome(role_id){
+    if (role_id == "Profesionales de la Salud"){ //Doctores
+      let message = "El Ministerio de salud deberá habilitar tu registro en no menos de 48 horas, te avisaremos una vez el Ministerio habilite tu registro";
+      this.showPrompt(message);
+    }else if (role_id == "Farmacia"){ //Farmacias
+      let message = "Por favor ingresa nuevamente tus datos para acceder a la aplicación";
+      this.showPrompt(message);
+    }
+  }
+
+  setGlobalInformation(userId, role){
+    this.globalDataCtrl.setUser_id(userId);
+    this.globalDataCtrl.setRole(role);
+  }
+
+  showPrompt(message) {
+    const alert = this.alertCtrl.create({
+      title: 'Pendiente de habilitación',
+      subTitle: message,
+      buttons: ['OK']
+    });
+    alert.present();
+    this.navCtrl.push(LoginPage);
   }
 } 

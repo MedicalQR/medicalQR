@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { ModalController, Platform, NavParams, ViewController } from 'ionic-angular';
 import { DatabaseServiceProvider } from '../../providers/database-service/database-service';
 import { IfStmt } from '@angular/compiler';
+import { HttpClient } from '@angular/common/http';
+import { GlobalDataProvider } from '../../providers/global-data/global-data';
 
 @Component({
   templateUrl: 'modal-pharmacy.html',
@@ -14,56 +16,56 @@ export class ModalPharmacyPage {
   info: any = {};
   message: any;
   color: any;
-  code: any;
+  code: any = {};
+  allSecurityCodes: any = [];
 
-  constructor(public platform: Platform, public params: NavParams, public viewCtrl: ViewController, public firebase: DatabaseServiceProvider) 
+  constructor(public platform: Platform, public params: NavParams, public viewCtrl: ViewController, public firebase: DatabaseServiceProvider, public globalDataCtrl: GlobalDataProvider, public http: HttpClient) 
   {
-    this.id = this.params.get('qr_id');  
-    var qr = {};
-    this.qr = qr;    
-    var doctor = {};
+    let qr = {};
+    this.qr = this.params.get('qr');  
+    let doctor = {};
     this.doctor = doctor;
-    var info = {};
+    let info = {};
     this.info = info;
   }
 
   ionViewWillEnter(){
-    this.obtainQRById();
+    this.getDoctorInformation();
   }
 
   dismiss() {
     this.viewCtrl.dismiss();
   }
 
-  obtainQRById() {
-    this.firebase.getQRById(this.id).valueChanges().subscribe(
-      qr => {
-        this.qr = qr[0]; 
-        this.getQRState();
-    })
-  }
-
- getQRState() {
-    this.firebase.getStateById(this.qr.qr_state_id).valueChanges().subscribe(
-      qr_state => {
-        this.qr.state = qr_state[0];
-        this.getDoctorInformation();
-    })
+  getSecurityCodes(){
+    var apiURL = this.globalDataCtrl.getApiURL();
+    var securityCodes;
+    return new Promise(resolve => {
+      this.http.get(apiURL+'SecurityCodes').subscribe((data: any[]) => {
+        resolve(securityCodes = data);
+        securityCodes.forEach(securityCode => {
+          if(securityCode.doctorId == this.doctor.id) {
+            this.allSecurityCodes.push(securityCode);
+          }
+        });
+        console.log("line 52");
+        console.log(this.allSecurityCodes);
+      }, err => {
+        console.log(err);
+      });
+    });
   }
 
   getDoctorInformation() {
-    this.firebase.getDoctorById(this.qr.user_id).valueChanges().subscribe(
-      doctor => {
-        this.doctor = doctor[0];
-        this.getDoctorState();
-    })
-  }
-
-  getDoctorState(){
-    this.firebase.getDoctorStateById(this.doctor.user_state_id).valueChanges().subscribe(
-      doctor_state => {
-        this.doctor.state = doctor_state[0];
-    }) 
+    var apiURL = this.globalDataCtrl.getApiURL();
+    return new Promise(resolve => {
+      this.http.get(apiURL+'doctors/' + this.qr.doctorId).subscribe((data: any[]) => {
+        resolve(this.doctor = data);
+        this.getSecurityCodes();
+      }, err => {
+        console.log(err);
+      });
+    });
   }
 
   checkPrescription() {
@@ -72,6 +74,8 @@ export class ModalPharmacyPage {
     if(this.info.code != null) {
       validationCode.innerHTML = "";
       if(this.info.date != null) {
+        console.log("date");
+        console.log(this.info.date);
         validationDate.innerHTML = "";
         let splitDate = this.info.date.split("-");
         let yy = splitDate[0];
@@ -80,14 +84,27 @@ export class ModalPharmacyPage {
         let date = mm + "/" + dd + "/" + yy;
         var timeDiff = Math.abs(new Date().getTime() - new Date(date).getTime());
         var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
+        console.log("date date");
+        console.log(date);
 
-        this.firebase.getAllSecurityCodes().valueChanges().subscribe(
-          code => {
-            this.code = code[0];
-            console.log(this.code);
-            console.log(this.info.code);
-            this.verifyCodeAndDate(date, diffDays);
-        })
+        if(this.allSecurityCodes.length > 0) {
+          console.log("Existen codigos para este doctor");
+          this.allSecurityCodes.forEach(securityCode => {
+            if(this.info.code == securityCode.securityNumber){
+              this.code = securityCode;
+              console.log("line 97");
+              console.log(this.code);
+            }
+            else {
+              this.writeMessage(false);
+            }
+          });
+        }
+        else {
+          this.writeMessage(false);
+        }
+
+        this.verifyDetails(date, diffDays);
       }
       else 
       validationDate.innerHTML = "Por favor, ingrese la fecha que figura en la receta.";
@@ -96,63 +113,28 @@ export class ModalPharmacyPage {
     validationCode.innerHTML = "Por favor, ingrese el código de seguridad que figura en la receta.";
   }
 
-  verifyCodeAndDate(date, diffDays) {
+  verifyDetails(date, diffDays) {
     let result = false;
-    if(this.qr.state == "Habilitado") {
-      console.log("habilitado");
-      if(this.code != null) {
-        if(this.code.code == this.info.code) {
-          console.log("code existe");
-          if(this.code.user_id == this.qr.user_id) {
-            console.log("el codigo es del user");
-            if(new Date(this.code.creation_date) < new Date(date)) {
-              if(new Date(date) < new Date(this.code.expiration_date)) {
-                console.log("dentro de la creacion y expiracion del codigo");
-                if(diffDays < 30) {
-                  console.log("menor a 30 dias");
-                  result = true;
-                }
-                else 
-                console.log("mayor a 30 dias");
-              }
-              else {
-                console.log("fuera de expiracion");
-              }
-            }
-            else {
-              console.log("fuera de la creacion");
+    if(this.code != null) {
+      if(new Date(this.code.creationDate) < new Date(date) && new Date(date) < new Date(this.code.expirationDate)) {
+        console.log("dentro de la creacion y expiracion del codigo");
+        if(diffDays < 30) {
+          console.log("menor a 30 dias");
+          if(this.qr.status == "Activo") {
+            console.log("Activo");
+            result = true;
+          }
+          else if(this.qr.status == "Inactivo") {
+            if(new Date(date) < new Date(this.qr.modificationDate)) {
+              console.log("Inactivo");
+              result = true;
             }
           }
-          else 
-          console.log("codigo no es de user");
-        }
-        else 
-        console.log("codigo no existe");
-      }
-    }
-    else if(this.qr.state == "Inhabilitado") {
-      console.log("inhabilitado");
-      if(new Date(date) < new Date(this.qr.modification_date)) {
-        console.log("date anterior a la ultima mod");
-        if(this.code != null) {
-          if(this.code.code == this.info.code) {
-            console.log("code existe");
-            if(this.code.user_id == this.qr.user_id) {
-              console.log("el codigo es del user");
-              if(new Date(this.code.creation_date) < new Date(date) || new Date(date) < new Date(this.code.expiration_date)) {
-                console.log("dentro de la creacion y expiracion del codigo");
-                if(diffDays < 30) {
-                  console.log("menor a 30 dias");
-                  result = true;
-                }
-              }
-            }
+          else {
+            result = false;
           }
         }
       }
-    }
-    else {
-      result = false;
     }
 
     this.writeMessage(result);

@@ -11,13 +11,17 @@ import { Injectable } from '@angular/core';
 export class GlobalDataProvider {
 
   user_id : any;
+  role : any;
   gmail_id : any;
+  facebook_id : any;
   homePage : any;
   apiUrl : any;
 
   constructor() {
     this.user_id = "";
     this.gmail_id = "";
+    this.facebook_id = "";
+    this.role = "";
     this.homePage = {};
     this.apiUrl = 'https://localhost:44355/api/';
   }
@@ -30,12 +34,28 @@ export class GlobalDataProvider {
     return this.user_id;
   }
 
+  setRole(value) {
+    this.role = value;
+  }
+
+  getRole() {
+    return this.role;
+  }
+
   setGmailId(value) {
     this.gmail_id = value;
   }
 
   getGmailId() {
     return this.gmail_id;
+  }
+
+  setFacebookId(value) {
+    this.facebook_id = value;
+  }
+
+  getFacebookId() {
+    return this.facebook_id;
   }
 
   setHomePage(value) {

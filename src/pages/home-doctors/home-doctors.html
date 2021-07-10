@@ -8,13 +8,16 @@
         <ion-segment-button id="SecurityCode" value="securityCode" (click)="securityCode()">
           Código de Seguridad
         </ion-segment-button>
-        <ion-segment-button id="Pending" value="pending" (click)="obtainQRs('Pending')">
+        <ion-segment-button id="All" value="all" (click)="obtainQRs('Todos')">
+          Todos
+        </ion-segment-button>
+        <ion-segment-button id="Pending" value="pending" (click)="obtainQRs('Pendiente')">
           Pendientes
         </ion-segment-button>
-        <ion-segment-button id="Enabled" value="enabled" (click)="obtainQRs('Enabled')">
+        <ion-segment-button id="Enabled" value="enabled" (click)="obtainQRs('Activo')">
           Habilitados
         </ion-segment-button>
-        <ion-segment-button id="Disabled" value="disabled" (click)="obtainQRs('Disabled')">
+        <ion-segment-button id="Disabled" value="disabled" (click)="obtainQRs('Inactivo')">
           Deshabilitados
         </ion-segment-button>
       </ion-segment>
@@ -32,18 +35,21 @@
         <ion-thumbnail item-start>
           <img src="{{qr.image}}">
         </ion-thumbnail>
-        <p item-end>{{qr.state}}</p>
+        <p item-end>{{qr.status}}</p>
       </ion-item>   
       <ion-item-options side="right">
         <button ion-button color="secondary" (click)="openModal({qr_id: qr.id})">Información</button>
-        <button *ngIf="qr.qr_state_id!=='c815819f-a121-453a-8708-f8b0e1a70215'" ion-button color="success" (click)="enable(qr)">Habilitar</button>
-        <button *ngIf="qr.qr_state_id!=='7923230e-9c35-4f93-9fb3-5e2634a0f5e1'" ion-button color="danger" (click)="disable(qr)">Inhabilitar</button>
+        <button *ngIf="qr.status !=='Activo' && !all" ion-button color="success" (click)="enable(qr)">Habilitar</button>
+        <button *ngIf="qr.status!=='Inactivo' && !all" ion-button color="danger" (click)="disable(qr)">Inhabilitar</button>
       </ion-item-options>
     </ion-item-sliding>
   </ion-list>   
   <ion-list *ngIf="security_code">
     <ion-item>
-      Código de Seguridad: {{this.code.code}}
-    </ion-item>   
+      Código de Seguridad: {{this.code.securityNumber}}
+    </ion-item>  
+    <ion-item>
+      Fecha de expiración: {{this.code.expirationDate}}
+    </ion-item>    
   </ion-list>   
 </ion-content>
