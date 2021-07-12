@@ -17,15 +17,17 @@ export class GlobalDataProvider {
   facebook_id : any;
   homePage : any;
   apiUrl : any;
+  sessionFlag: any;
 
   constructor() {
     this.user_id = "";
     this.email = "";
     this.gmail_id = "";
     this.facebook_id = "";
+    this.sessionFlag = "";
     this.role = "";
     this.homePage = {};
-    this.apiUrl = 'https://localhost:44355/api/';
+    this.apiUrl = 'http://medicalqrwebapp.azurewebsites.net/api/';
   }
 
   setUser_id(value) {
@@ -66,6 +68,14 @@ export class GlobalDataProvider {
 
   getFacebookId() {
     return this.facebook_id;
+  }
+
+  setSessionFlag(value){
+    this.sessionFlag = value;
+  }
+
+  getSessionFlag() {
+    return this.sessionFlag;
   }
 
   setHomePage(value) {

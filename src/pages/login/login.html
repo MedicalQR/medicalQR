@@ -1,21 +1,11 @@
 <ion-content>
-  <!-- set your image path -->
-  <div class="background" style="background: url('./assets/imgs/login-background.jpg')"></div>
+  <div class="background" style="background: url('./assets/imgs/background.jpg')"></div>
   <div class="cape"></div>
   <div class="content" content>
     <figure>
-      <!-- set path to your logo -->
-      <img class="login-logo" src="./assets/imgs/qrlogo.jpg" alt="Logo">
+      <img class="login-logo" src="./assets/imgs/logo-medicalqr.png" alt="Logo">
     </figure>
-
     <hr class="divider">
-    <button ion-button color="danger" (click)="loginGoogle()">
-      <ion-icon name="logo-google">&nbsp;</ion-icon>
-      Ingresar con Google
-    </button>
-    <button ion-button color="primary" (click)="loginFacebook()">
-      <ion-icon name="logo-facebook">&nbsp;</ion-icon>
-      Ingresar con Facebook
-    </button>    
+      <div id="firebaseui-auth-container"></div>
   </div>
 </ion-content>

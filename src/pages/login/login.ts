@@ -12,37 +12,39 @@ import { GlobalDataProvider } from '../../providers/global-data/global-data';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
 import { HttpClient } from '@angular/common/http';
+import { AuthService } from '../../providers/auth0/auth.service';
+import { e } from '@angular/core/src/render3';
+import { FirebaseAuthProvider } from '../../providers/firebase-auth/firebase-auth';
 
 @IonicPage()
 @Component({
   selector: 'page-login',
   templateUrl: 'login.html',
+  providers: []
 })
 export class LoginPage {
 
   user : any = {};
   existingUser : any = {};
-
   doctors: any[];
   pharmacies: any[];
   allRoles: any[];
-  
-  loggedUser : any = {};
   errorMessage : any;
-  private todo : FormGroup;
-
-  picture;
-  name;
-  email;
   uid; 
+  ui: any;
 
-  constructor(public menuCtrl: MenuController, public alertCtrl: AlertController, public navCtrl: NavController, public navParams: NavParams, public firebase: DatabaseServiceProvider, private formBuilder: FormBuilder,  public globalDataCtrl: GlobalDataProvider, private afAuth: AngularFireAuth, public http: HttpClient) {
-    this.loggedUser = this.formBuilder.group({
-      document: ['', Validators.required],
-      password: ['', Validators.required],
-      role : ['', Validators.required],
-    });
+  constructor(public menuCtrl: MenuController, public alertCtrl: AlertController, public navCtrl: NavController, public navParams: NavParams, public firebase: DatabaseServiceProvider, private formBuilder: FormBuilder,  public globalDataCtrl: GlobalDataProvider, private afAuth: AngularFireAuth, public http: HttpClient, private authProvider: FirebaseAuthProvider) {
+    let sessionFlag = this.globalDataCtrl.getSessionFlag();
+    if(sessionFlag != true)
+      this.validateLogin();
+    else {
+      this.globalDataCtrl.setSessionFlag(false);
+    }
     this.menuCtrl.enable(false, 'myMenu');
+  }
+
+  ionViewDidLoad(){
+    this.authProvider.ui.start('#firebaseui-auth-container', FirebaseAuthProvider.getUiConfig());
   }
 
   ionViewWillEnter(){
@@ -60,50 +62,68 @@ export class LoginPage {
     ];
   }
 
-  async loginGoogle() {
+  validateLogin(){
     this.existingUser = null;
-    let googleProvider = new firebase.auth.GoogleAuthProvider();
-    const res = await this.afAuth.auth.signInWithPopup(googleProvider);
-    const user = res.user;
-    this.uid = user.uid; 
-    this.globalDataCtrl.setGmailId(this.uid);
-    this.getDoctors().then((result) => {
-      if(this.doctors.length > 0){
-        this.doctors.forEach(doctor => {
-          if(doctor.GmailID == this.uid){
-            this.existingUser = doctor;
-            this.setGlobalInformation(doctor.id, "Profesionales de la Salud");
-            if(this.existingUser.Status == 'Activo'){
-              this.globalDataCtrl.setUserEmail(this.existingUser.email);
-              this.globalDataCtrl.setHomePage(HomeDoctorsPage);
-              this.navCtrl.push(HomeDoctorsPage, {
-                id: this.existingUser.id
-              });
-            } else {
-              this.goToHome("Profesionales de la Salud");
-            }
-          }
-        });
-      }
-      if(this.existingUser == null){
-        this.getPharmacies().then((result) => {
-          if(this.pharmacies.length > 0){
-            this.pharmacies.forEach(pharmacy => {
-              if(pharmacy.GmailID == this.uid){
-                this.existingUser = pharmacy;
-                this.setGlobalInformation(pharmacy.id, "Farmacia");
-                this.globalDataCtrl.setUserEmail(this.existingUser.email);
-                this.globalDataCtrl.setHomePage(HomePharmacyPage);
-                this.navCtrl.push(HomePharmacyPage);
+    firebase.auth().getRedirectResult().then((result) => {
+      if(result != null && result != undefined) {
+        this.uid  = result.user.uid;
+        this.globalDataCtrl.setGmailId(this.uid);
+        this.getDoctors().then((result) => {
+          if(this.doctors.length > 0){
+            this.doctors.forEach(doctor => {
+              if(doctor.GmailID == this.uid){
+                this.existingUser = doctor;
+                this.setGlobalInformation(doctor.id, "Profesionales de la Salud");
+                if(this.existingUser.Status == 'Activo'){
+                  this.globalDataCtrl.setUserEmail(this.existingUser.email);
+                  this.globalDataCtrl.setHomePage(HomeDoctorsPage);
+                  this.navCtrl.push(HomeDoctorsPage, {
+                    id: this.existingUser.id
+                  });
+                } else {
+                  this.goToHome("Profesionales de la Salud");
+                }
               }
             });
           }
-        });
+          if(this.existingUser == null){
+            this.getPharmacies().then((result) => {
+              if(this.pharmacies.length > 0){
+                this.pharmacies.forEach(pharmacy => {
+                  if(pharmacy.GmailID == this.uid){
+                    this.existingUser = pharmacy;
+                    this.setGlobalInformation(pharmacy.id, "Farmacia");
+                    this.globalDataCtrl.setUserEmail(this.existingUser.email);
+                    this.globalDataCtrl.setHomePage(HomePharmacyPage);
+                    this.navCtrl.push(HomePharmacyPage);
+                  }
+                });
+              }
+            });
+          }
+          if(this.existingUser == null) {
+            this.navCtrl.push(RegisterPage);
+          }
+        })
       }
-      if(this.existingUser == null) {
-        this.navCtrl.push(RegisterPage);
-      }
-    });
+    })
+    .catch((error) => {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+    })
+  }
+
+  loginGoogle() {
+    this.existingUser = null;
+    let googleProvider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithRedirect(googleProvider);
+
+    /*const res = await this.afAuth.auth.signInWithPopup(googleProvider);
+    console.log("res");
+    console.log(res);
+    const user = res.user;
+    this.uid = user.uid; */
  }
   
   async loginFacebook() {
@@ -163,6 +183,7 @@ export class LoginPage {
       this.http.get(apiURL+'Doctors').subscribe((data: any[]) => {
         resolve(this.doctors = data);
       }, err => {
+        console.log("getDoctors error");
         console.log(err);
       });
     });
@@ -201,6 +222,6 @@ export class LoginPage {
       buttons: ['OK']
     });
     alert.present();
-    this.navCtrl.push(LoginPage);
+    //this.navCtrl.push(LoginPage);
   }
 } 
